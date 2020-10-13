@@ -1,0 +1,77 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title class="absoluter">Register</ion-title>
+        <ion-back-button color="secondary" class="goleft shadow" routerLink="/login">
+        </ion-back-button>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-grid class="ion-grid">
+        <ion-grid class="ion-grid2">
+            <h3>Registration</h3>
+            <ion-list>
+                <ion-item lines="full">
+                    <ion-label position="floating">Email</ion-label>
+                    <ion-input type="email" spellcheck="true" pattern="email"></ion-input>
+                </ion-item>
+                <ion-row>
+                    <ion-col size="6">
+                        <ion-item lines="full">
+                            <ion-label position="floating">First Name</ion-label>
+                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-item lines="full">
+                            <ion-label position="floating">Last Name</ion-label>
+                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="6">
+                        <ion-item lines="full">
+                            <ion-label position="floating">Username</ion-label>
+                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-item lines="full">
+                            <ion-label position="floating">D.O.B</ion-label>
+                            <ion-input type="text" spellcheck="true" pattern="date"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+                <ion-item lines="full">
+                    <ion-label>Country</ion-label>
+                    <ion-select placeholder="Select Country">
+                        <ion-select-option value="254">+254</ion-select-option>
+                        <ion-select-option value="236">+236</ion-select-option>
+                        <ion-select-option value="1">+1</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item lines="full">
+                    <ion-label position="floating">Phone Number</ion-label>
+                    <ion-input type="text" spellcheck="true" pattern="tel"></ion-input>
+                </ion-item>
+                <ion-item lines="full">
+                    <ion-label>Gender</ion-label>
+                    <ion-select placeholder="Select Gender">
+                        <ion-select-option value="Female">Female</ion-select-option>
+                        <ion-select-option value="Male">Male</ion-select-option>
+                        <ion-select-option value="Other">Other</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item lines="full">
+                    <ion-label position="floating" spellcheck="true" pattern="password">Password</ion-label>
+                    <ion-input type="password"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
+                Sign In
+                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+            </ion-button>
+        </ion-grid>
+    </ion-grid>
+</ion-content>

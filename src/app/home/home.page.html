@@ -1,20 +1,22 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            TripPlanner
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <ion-header>
+        <ion-toolbar>
+            <ion-title size="small">Home to Solemn Travel</ion-title>
+        </ion-toolbar>
+    </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+    <div id="container">
+        <strong>New Customer? Register Here</strong><br><br>
+        <ion-chip routerLink="/register" color="secondary">Register</ion-chip><br><br>
+        <strong>Already have an account?</strong><br><br>
+        <ion-chip class="now" routerLink="/login" color="primary">Login</ion-chip>
+    </div>
 </ion-content>

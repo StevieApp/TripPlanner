@@ -1,0 +1,76 @@
+.goleft {
+    float: left;
+    margin-left: 5px;
+}
+
+.absoluter {
+    position: absolute;
+    display: block;
+    margin: auto;
+    width: 100%;
+    padding-top: 10px;
+}
+
+ion-back-button {
+    z-index: 100;
+}
+
+.mytitle {
+    outline: none;
+    font-size: 20px;
+    text-align: center;
+    margin-top: auto;
+    width: 100%;
+    margin-bottom: auto;
+    position: absolute;
+}
+
+.ion-grid {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 7%;
+    padding-right: 7%;
+    margin-top: 20vh;
+    padding-bottom: auto;
+}
+
+.ion-grid2 {
+    border: 1px inset #3dc2ff;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5%;
+}
+
+h3 {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+ion-toolbar {
+    text-align: center;
+}
+
+ionic-chip {
+    height: 40px;
+    position: absolute;
+    border-radius: 20px;
+}
+
+ion-button {
+    margin-top: 15px;
+    border-radius: 50%;
+}
+
+ion-label {
+    font-size: 20px;
+}
+
+.my-custom-class {
+    --background: #222;
+    --spinner-color: #3dc2ff;
+    color: #3dc2ff;
+}

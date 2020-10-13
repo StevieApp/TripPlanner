@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-back-button color="secondary" class="goleft shadow" routerLink="/home">
+        </ion-back-button>
+        <ion-title class="absoluter">Login</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-grid class="ion-grid">
+        <ion-grid class="ion-grid2">
+            <h3>Login</h3>
+            <ion-list>
+                <ion-item lines="full">
+                    <ion-label position="floating">Email</ion-label>
+                    <ion-input type="email" spellcheck="true" pattern="email"></ion-input>
+                </ion-item>
+                <ion-item lines="full">
+                    <ion-label position="floating" spellcheck="true" pattern="password">Password</ion-label>
+                    <ion-input type="password"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
+                Sign In
+                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+            </ion-button>
+        </ion-grid>
+    </ion-grid>
+</ion-content>
