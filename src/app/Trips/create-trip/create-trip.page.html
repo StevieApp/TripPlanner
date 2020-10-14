@@ -12,65 +12,36 @@
             <h3>Create Trip</h3>
             <ion-list>
                 <ion-item lines="full">
-                    <ion-label position="floating">Email</ion-label>
-                    <ion-input type="email" spellcheck="true" pattern="email"></ion-input>
-                </ion-item>
-                <ion-row>
-                    <ion-col size="6">
-                        <ion-item lines="full">
-                            <ion-label position="floating">First Name</ion-label>
-                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
-                        </ion-item>
-                    </ion-col>
-                    <ion-col size="6">
-                        <ion-item lines="full">
-                            <ion-label position="floating">Last Name</ion-label>
-                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
-                        </ion-item>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="6">
-                        <ion-item lines="full">
-                            <ion-label position="floating">Username</ion-label>
-                            <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
-                        </ion-item>
-                    </ion-col>
-                    <ion-col size="6">
-                        <ion-item lines="full">
-                            <ion-label position="floating">D.O.B</ion-label>
-                            <ion-datetime displayFormat="MM/DD/YYYY" min="1994-03-14" max="2012-12-09" value="2002-09-23T15:03:46.789"></ion-datetime>
-                        </ion-item>
-                    </ion-col>
-                </ion-row>
-
-                <ion-item lines="full">
-                    <ion-label>Country</ion-label>
-                    <ion-select placeholder="Select Country">
-                        <ion-select-option value="+254">Kenya</ion-select-option>
-                        <ion-select-option value="+263">Zimbambwe</ion-select-option>
-                        <ion-select-option value="+1">United States</ion-select-option>
-                    </ion-select>
+                    <ion-label position="floating">File</ion-label>
+                    <ion-input type="file" spellcheck="true" pattern="file"></ion-input>
                 </ion-item>
                 <ion-item lines="full">
-                    <ion-label position="floating">Phone Number</ion-label>
+                    <ion-label position="floating">Trip Name</ion-label>
+                    <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Start Date</ion-label>
+                    <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Start Time</ion-label>
+                    <ion-datetime display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
+                </ion-item>
+                <ion-item>
+                    <ion-label>End Date</ion-label>
+                    <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                </ion-item>
+                <ion-item lines="full">
+                    <ion-label position="floating">Location</ion-label>
                     <ion-input type="text" spellcheck="true" pattern="tel"></ion-input>
                 </ion-item>
-                <ion-item lines="full">
-                    <ion-label>Gender</ion-label>
-                    <ion-select placeholder="Select Gender">
-                        <ion-select-option value="Female">Female</ion-select-option>
-                        <ion-select-option value="Male">Male</ion-select-option>
-                        <ion-select-option value="Other">Other</ion-select-option>
-                    </ion-select>
-                </ion-item>
-                <ion-item lines="full">
-                    <ion-label position="floating" spellcheck="true" pattern="password">Password</ion-label>
-                    <ion-input type="password"></ion-input>
+                <ion-item>
+                    <ion-label>Description+</ion-label>
+                    <ion-icon color="warning" name="add-circle-outline" slot="end"></ion-icon>
                 </ion-item>
             </ion-list>
             <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
-                Sign In
+                Create Trip
                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
             </ion-button>
         </ion-grid>

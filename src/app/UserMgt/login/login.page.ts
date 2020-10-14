@@ -28,6 +28,11 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(()=>{
+      let element = document.getElementById('look');
+      element.click();
+      console.log(element)
+    }, 1000)
   }
 
 }

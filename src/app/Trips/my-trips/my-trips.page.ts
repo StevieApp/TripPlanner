@@ -16,7 +16,7 @@ export class MyTripsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.boxes[0].open = "true"
+    this.boxes[0].open = "true";
   }
-  
+
 }
