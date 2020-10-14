@@ -1,0 +1,29 @@
+.goleft {
+    float: left;
+    margin-left: 5px;
+}
+
+.absoluter {
+    position: absolute;
+    display: block;
+    margin: auto;
+    width: 100%;
+    padding-top: 10px;
+}
+
+ion-toolbar {
+    text-align: center;
+}
+
+.bgimage {
+    background-image: url('../../../assets/icon/favicon.png');
+    width: 100%;
+    background-position: center;
+    background-size: cover;
+    height: 100px;
+    background-repeat: no-repeat;
+}
+
+.boo {
+    float: right;
+}

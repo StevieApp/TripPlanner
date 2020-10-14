@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-create-trip',
+  templateUrl: './create-trip.page.html',
+  styleUrls: ['./create-trip.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class CreateTripPage implements OnInit {
 
   constructor(
     public loadingController: LoadingController, 
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
 
     const { role, data } = await loading.onDidDismiss();
     console.log('Loading dismissed!');
-    await this.router.navigate(["/selector"]);
+    await this.router.navigate(["/my-trips"]);
   }
 
   ngOnInit() {

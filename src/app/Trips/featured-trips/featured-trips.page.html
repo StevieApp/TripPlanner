@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title class="absoluter">Featured Trips</ion-title>
+        <ion-back-button color="primary" class="goleft shadow" routerLink="/selector">
+        </ion-back-button>
+    </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+    <ion-content fullscreen>
+        <ion-card *ngFor="let box of boxes; let i = index;">
+            <ion-card-header class="bgimage"></ion-card-header>
+            <ion-card-header>
+                <ion-card-subtitle>Destination</ion-card-subtitle>
+                <ion-card-title>
+                    Madison, WI
+                    <ion-icon class="boo" tappable *ngIf="!box.open" (click)="toggleSection(i)" name="caret-down-outline"></ion-icon>
+                    <ion-icon class="boo" tappable *ngIf="box.open" (click)="toggleSection(i)" name="caret-up-outline"></ion-icon>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content *ngIf="box.open">
+                Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
+                <br>
+                <ion-button expand="block">Book
+                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                </ion-button>
+            </ion-card-content>
+        </ion-card>
+    </ion-content>

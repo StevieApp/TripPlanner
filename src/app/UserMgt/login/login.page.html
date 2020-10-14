@@ -1,8 +1,8 @@
 <ion-header>
     <ion-toolbar>
-        <ion-back-button color="secondary" class="goleft shadow" routerLink="/home">
+        <ion-title class="absoluter">Trip Planner</ion-title>
+        <ion-back-button color="primary" class="goleft shadow" routerLink="/home">
         </ion-back-button>
-        <ion-title class="absoluter">Login</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -20,7 +20,7 @@
                     <ion-input type="password"></ion-input>
                 </ion-item>
             </ion-list>
-            <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
+            <ion-button (click)="presentLoading()" type="submit" color="primary" expand="block">
                 Sign In
                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
             </ion-button>

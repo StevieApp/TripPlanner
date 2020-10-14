@@ -19,6 +19,26 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./UserMgt/register/register.module').then( m => m.RegisterPageModule)
   },
+  {
+    path: 'selector',
+    loadChildren: () => import('./Trips/selector/selector.module').then( m => m.SelectorPageModule)
+  },
+  {
+    path: 'featured-trips',
+    loadChildren: () => import('./Trips/featured-trips/featured-trips.module').then( m => m.FeaturedTripsPageModule)
+  },
+  {
+    path: 'my-trips',
+    loadChildren: () => import('./Trips/my-trips/my-trips.module').then( m => m.MyTripsPageModule)
+  },
+  {
+    path: 'booked-trips',
+    loadChildren: () => import('./Trips/booked-trips/booked-trips.module').then( m => m.BookedTripsPageModule)
+  },
+  {
+    path: 'create-trip',
+    loadChildren: () => import('./Trips/create-trip/create-trip.module').then( m => m.CreateTripPageModule)
+  },
 ];
 
 @NgModule({
