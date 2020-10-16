@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     justify-self: center;
-    background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(25, 0, 255));
+    background-image: linear-gradient(to right, #a2faf3, #558fd1, #4047a3, #342d97);
 }
 
 .splash::before {
@@ -16,8 +16,9 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    opacity: .5;
     height: 100%;
-    background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(25, 0, 255));
+    background-image: linear-gradient(to right, #70f9ee, #342d97);
     transform: skew(-45deg);
     transform-origin: center;
 }
@@ -31,7 +32,7 @@
 
 .cube1,
 .cube2 {
-    background-color: #3880ff;
+    background-color: #0a018d;
     width: 15px;
     height: 15px;
     position: absolute;

@@ -11,9 +11,11 @@
         <ion-grid class="ion-grid2">
             <h3>Create Trip</h3>
             <ion-list>
+                <img class="image" id="blah" [src]="imageSrc" alt="my image" width="150" height="150" onerror="this
+                .onerror=null;this.src='../../../assets/def.jpg';" /><br>
                 <ion-item lines="full">
                     <ion-label position="floating">File</ion-label>
-                    <ion-input type="file" spellcheck="true" pattern="file"></ion-input>
+                    <ion-input type="file" (change)="readURL($event)" spellcheck="true" [(ngModel)]="value" accept="image/gif, image/jpeg, image/png" pattern="file"></ion-input>
                 </ion-item>
                 <ion-item lines="full">
                     <ion-label position="floating">Trip Name</ion-label>
@@ -40,8 +42,25 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>Description</ion-label>
-                    <ion-icon color="warning" name="add-circle-outline" slot="end"></ion-icon>
+                    <ion-icon color="warning" *ngIf="descriptions.length<=6" (click)="additem()" name="add-circle-outline" slot="end" tappable>
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-icon>
                 </ion-item>
+                <ion-row *ngFor="let description of descriptions;let i = index;">
+                    <ion-col size="10">
+                        <ion-item>
+                            <ion-input type="text" [(ngModel)]="trip.descriptions[i]" spellcheck="true" placeholder="{{i+1}}. Add description" value="{{descriptions[i]}}" pattern="text"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                    <ion-col size="2" tappable *ngIf="(i == (descriptions.length-1))&&i!=0" (click)="removeitem()">
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        <ion-label class="whole">
+                            <ion-icon color="danger" name="remove-circle-outline">
+                            </ion-icon>
+                        </ion-label>
+                    </ion-col>
+                </ion-row>
+
             </ion-list>
             <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
                 Create Trip

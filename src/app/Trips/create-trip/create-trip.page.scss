@@ -33,6 +33,13 @@ ion-back-button {
     padding-bottom: 5%;
 }
 
+#blah {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 75px;
+}
+
 h3 {
     text-align: center;
     font-size: 35px;
@@ -57,6 +64,16 @@ ion-button {
 
 ion-label {
     font-size: 20px;
+}
+
+.whole {
+    text-align: center;
+    height: 100%;
+    display: block;
+    margin-left: auto;
+    margin-top: 10px;
+    margin-bottom: auto;
+    margin-right: auto;
 }
 
 .my-custom-class {
