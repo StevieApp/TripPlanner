@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { ViewChild, ElementRef } from '@angular/core';
+
+declare var google: any;
 
 @Component({
   selector: 'app-create-trip',
@@ -9,6 +12,9 @@ import { LoadingController } from '@ionic/angular';
 })
 export class CreateTripPage implements OnInit {
   imageSrc;
+  map: any;
+
+  @ViewChild('map', {read: ElementRef, static: false}) mapRef: ElementRef;
 
   constructor(
     public loadingController: LoadingController, 
@@ -22,6 +28,7 @@ export class CreateTripPage implements OnInit {
   value;
   descriptions = [];
   trip:any = JSON.parse('{}');
+  kami = false;
 
   async presentLoading() {
     const loading = await this.loadingController.create({
@@ -77,5 +84,23 @@ export class CreateTripPage implements OnInit {
     removeitem(){
       this.descriptions.pop();
       this.trip.descriptions.pop();
+    }
+
+    // ionViewDidEnter() {
+    //   this.showmap();
+    // }
+
+    showmap(){
+      this.kami = true;
+      console.log("alibaba");
+      setTimeout(()=>{
+        const location = new google.maps.LatLng(-1.28333, 36.81667);
+        const options = {
+          center: location,
+          zoom: 15,
+          disableDefaultUI: true
+        }
+      this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+      }, 200)
     }
 }

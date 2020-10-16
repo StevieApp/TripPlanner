@@ -9,6 +9,7 @@ import { LoadingController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
 
+  mapskey = "AIzaSyCw-S2fcPaY7IK4BcIeCNsxdInm2hkX_J8";
   constructor(
     public loadingController: LoadingController, 
     public router: Router
@@ -31,7 +32,6 @@ export class LoginPage implements OnInit {
     setTimeout(()=>{
       let element = document.getElementById('look');
       element.click();
-      console.log(element)
     }, 1000)
   }
 

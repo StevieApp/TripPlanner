@@ -7,7 +7,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <ion-grid class="ion-grid">
+    <div #map *ngIf="kami == true" id="map"></div>
+    <ion-grid *ngIf="kami == false" class="ion-grid">
         <ion-grid class="ion-grid2">
             <h3>Create Trip</h3>
             <ion-list>
@@ -33,7 +34,7 @@
                     <ion-label>End Date</ion-label>
                     <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
                 </ion-item>
-                <ion-item lines="full">
+                <ion-item lines="full" tappable (click)="showmap()">
                     <ion-label position="floating">
                         <ion-icon name="location-outline"></ion-icon>
                         Location
