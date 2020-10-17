@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { IonBackButtonDelegate, LoadingController } from '@ionic/angular';
 import { ViewChild, ElementRef } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 declare var google: any;
 
@@ -18,7 +19,8 @@ export class CreateTripPage implements OnInit {
 
   constructor(
     public loadingController: LoadingController, 
-    public router: Router
+    public router: Router,
+    public toastController: ToastController
   ) { }
 
   myDate: String = new Date().toISOString();
@@ -49,6 +51,8 @@ export class CreateTripPage implements OnInit {
     this.trip.descriptions = [];
     this.descriptions.push('');
     this.trip.descriptions.push('');
+    this.trip.latitude = -1.28333;
+    this.trip.longitude = 36.81667;
   }
 
   readURL(event): void {
@@ -90,17 +94,141 @@ export class CreateTripPage implements OnInit {
     //   this.showmap();
     // }
 
+    addmarkertomap(){
+      let position = new google.maps.LatLng(this.trip.latitude, this.trip.longitude);
+      let mapMarker = new google.maps.Marker({
+        position: position,
+        title: 'Trip Planner',
+        draggable:true,
+        latitude: this.trip.latitude,
+        animation: google.maps.Animation.DROP,
+        longitude: this.trip.longitude,
+        description: 'Best Trip Ever'
+      });
+
+      mapMarker.setMap(this.map);
+      this.addInfoWindowToMarker(mapMarker)
+    }
+    infoWindow;
+    addInfoWindowToMarker(marker){
+      let infoWindowContent = '<div id="mild" style="opacity:.8;">' +
+                                '<h2 style="color:black;" id="firstHeading" class="firstHeading">' +
+                                marker.title + '</h2>' +
+                                '<p style="color:black;"><b>Coordinates:</b></p>' +
+                                '<p style="color:black;"> Longitude: ' + marker.longitude + '</p>' +
+                                '<p style="color:black;"> Latitude: ' + marker.latitude + '</p>' +
+                                '<p style="color:black;"> Description: ' + marker.description + '</p>' +
+                                '<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
+                              '</div>';
+      let infoWindow = new google.maps.InfoWindow({
+        content: infoWindowContent
+      });
+      this.infoWindow = infoWindow;
+      marker.addListener('click', ()=>{
+        this.closeInfoWindow();
+        infoWindow.open(this.map, marker);
+      });
+      marker.addListener('drag', ()=>{
+        this.closeInfoWindow();
+      });
+      marker.addListener('dragend', ()=>{
+        this.trip.longitude = marker.getPosition().lng();
+        this.trip.latitude = marker.getPosition().lat();
+        marker.longitude = marker.getPosition().lng();
+        marker.latitude = marker.getPosition().lat();
+        var position = marker.getPosition();
+        marker.setPosition(position,{draggable:'true'});
+        let infoWindowContent = '<div id="mild" style="opacity:.8;">' +
+                                '<h2 style="color:black;" id="firstHeading" class="firstHeading">' +
+                                marker.title + '</h2>' +
+                                '<p style="color:black;"><b>Coordinates:</b></p>' +
+                                '<p style="color:black;"> Longitude: ' + marker.longitude + '</p>' +
+                                '<p style="color:black;"> Latitude: ' + marker.latitude + '</p>' +
+                                '<p style="color:black;"> Description: ' + marker.description + '</p>' +
+                                '<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
+                              '</div>';
+        this.infoWindow.setContent(infoWindowContent);
+      });
+      // google.maps.event.addListener(marker, 'dragend', ()=>
+      //        {
+      //           var markerlatlong = marker.getPosition();
+      //           marker.longitude = marker.getPosition().lng();
+      //           marker.latitude = marker.getPosition().lat();
+      //        });
+
+      google.maps.event.addListener(infoWindow, 'domready', ()=>{
+        setTimeout(()=>{
+          document.getElementById('accept').addEventListener('click',()=>{
+            this.kami = false;
+          });
+        }, 200);
+      });
+        
+    }
+    closeInfoWindow(){
+      this.infoWindow.close();
+    }
+
     showmap(){
       this.kami = true;
-      console.log("alibaba");
-      setTimeout(()=>{
-        const location = new google.maps.LatLng(-1.28333, 36.81667);
-        const options = {
-          center: location,
-          zoom: 15,
-          disableDefaultUI: true
+      if(typeof google != 'undefined'){
+        try{
+          setTimeout(()=>{
+            const location = new google.maps.LatLng(this.trip.latitude, this.trip.longitude);
+            const options = {
+              center: location,
+              zoom: 15,
+              disableDefaultUI: true
+            }
+            this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+            this.addmarkertomap();
+          }, 200)
+        }catch(error){
+          console.error();
+          this.presentToastWithOptions(console.error());
         }
-      this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-      }, 200)
+      } else{
+        this.presentToastWithOptions("Issue displaying maps");
+      }
+    }
+
+    async presentToastWithOptions(message) {
+      const toast = await this.toastController.create({
+        header: message,
+        message: 'Tap Back to Close',
+        position: 'bottom',
+        color: 'danger',
+        buttons: [
+          {
+            side: 'end',
+            text: 'Back',
+            icon: 'alert',
+            role: 'cancel',
+            handler: () => {
+              this.kami = false;
+              toast.dismiss();
+            }
+          }
+        ]
+      });
+      toast.present();
+    }
+
+    decide(){
+      console.log(this.kami);
+      if(this.kami==true){
+        this.kami = false;
+      } else if(this.kami==false){
+        this.router.navigate(['/selector']);
+      }
+    }
+
+    @ViewChild(IonBackButtonDelegate, { static: false }) backButton: IonBackButtonDelegate;
+
+    ionViewDidEnter() {
+      console.log('ionViewDidEnter');
+      this.backButton.onClick = () => {
+        this.decide();
+      };
     }
 }
