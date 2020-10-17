@@ -41,7 +41,6 @@ export class CreateTripPage implements OnInit {
     await loading.present();
 
     const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!');
     await this.router.navigate(["/my-trips"]);
   }
 
@@ -56,8 +55,6 @@ export class CreateTripPage implements OnInit {
   }
 
   readURL(event): void {
-    console.log(event)
-
     if (event.target.files && event.target.files[0]) {
       var fullPath = this.value;
       var filename;
@@ -215,7 +212,6 @@ export class CreateTripPage implements OnInit {
     }
 
     decide(){
-      console.log(this.kami);
       if(this.kami==true){
         this.kami = false;
       } else if(this.kami==false){
@@ -226,7 +222,6 @@ export class CreateTripPage implements OnInit {
     @ViewChild(IonBackButtonDelegate, { static: false }) backButton: IonBackButtonDelegate;
 
     ionViewDidEnter() {
-      console.log('ionViewDidEnter');
       this.backButton.onClick = () => {
         this.decide();
       };
