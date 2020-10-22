@@ -7,23 +7,25 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <ion-grid class="ion-grid">
-        <ion-grid class="ion-grid2">
-            <h3>Login</h3>
-            <ion-list>
-                <ion-item lines="full">
-                    <ion-label position="floating">Email</ion-label>
-                    <ion-input type="email" spellcheck="true" pattern="email"></ion-input>
-                </ion-item>
-                <ion-item lines="full">
-                    <ion-label position="floating" spellcheck="true" pattern="password">Password</ion-label>
-                    <ion-input type="password"></ion-input>
-                </ion-item>
-            </ion-list>
-            <ion-button id="look" (click)="presentLoading()" type="submit" color="primary" expand="block">
-                Sign In
-                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-            </ion-button>
+    <form [formGroup]="loginForm" (ngSubmit)="presentLoading()" novalidate>
+        <ion-grid class="ion-grid">
+            <ion-grid class="ion-grid2">
+                <h3>Login</h3>
+                <ion-list>
+                    <ion-item lines="full">
+                        <ion-label position="floating">Email</ion-label>
+                        <ion-input formControlName="email" [(ngModel)]="email" type="email"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label position="floating">Password</ion-label>
+                        <ion-input formControlName="password" [(ngModel)]="password" type="password"></ion-input>
+                    </ion-item>
+                </ion-list>
+                <ion-button [disabled]="!loginForm.valid" id="look" type="submit" color="primary" expand="block">
+                    Sign In
+                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                </ion-button>
+            </ion-grid>
         </ion-grid>
-    </ion-grid>
+    </form>
 </ion-content>

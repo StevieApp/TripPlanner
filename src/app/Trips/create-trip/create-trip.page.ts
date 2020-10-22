@@ -97,7 +97,7 @@ export class CreateTripPage implements OnInit {
         position: position,
         title: 'Trip Planner',
         draggable:true,
-        icon: { url: '../../../assets/purple-dot.png'},
+        //icon: { url: '../../../assets/purple-dot.png'},
         latitude: this.trip.latitude,
         animation: google.maps.Animation.DROP,
         longitude: this.trip.longitude,

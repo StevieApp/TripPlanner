@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-my-trips',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyTripsPage implements OnInit {
 
-  constructor() { }
-
-  boxes:any = [{},{},{},{},{}]
+  /*constructor(db: AngularFirestore) { 
+    this.trips = db.collection('trips').valueChanges();
+  }*/
+  constructor(){}
+  trips: Observable<any[]>;
+  boxes:any = [{},{},{},{},{}];
 
   toggleSection(index){
     this.boxes[index].open = !this.boxes[index].open;
@@ -17,6 +22,7 @@ export class MyTripsPage implements OnInit {
 
   ngOnInit() {
     this.boxes[0].open = "true";
+     
   }
 
 }

@@ -22,6 +22,21 @@
                     <ion-label position="floating">Trip Name</ion-label>
                     <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
                 </ion-item>
+                <ion-item lines="full" tappable (click)="showmap()">
+                    <ion-label position="floating">
+                        <ion-icon name="location-outline"></ion-icon>
+                        Location
+                    </ion-label>
+                    <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>+254</ion-label>
+                    <ion-input rows="4" placeholder="eg.0725603808"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">Overview</ion-label>
+                    <ion-textarea rows="4" placeholder="Overview"></ion-textarea>
+                </ion-item>
                 <ion-item>
                     <ion-label>Start Date</ion-label>
                     <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
@@ -33,13 +48,6 @@
                 <ion-item>
                     <ion-label>End Date</ion-label>
                     <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
-                </ion-item>
-                <ion-item lines="full" tappable (click)="showmap()">
-                    <ion-label position="floating">
-                        <ion-icon name="location-outline"></ion-icon>
-                        Location
-                    </ion-label>
-                    <ion-input type="text" spellcheck="true" pattern="tel"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label>Description</ion-label>
