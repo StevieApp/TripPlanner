@@ -3,6 +3,11 @@ import { Router } from '@angular/router';
 import { IonBackButtonDelegate, LoadingController } from '@ionic/angular';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 declare var google: any;
 
@@ -14,66 +19,188 @@ declare var google: any;
 export class CreateTripPage implements OnInit {
   imageSrc;
   map: any;
+  createTripForm: FormGroup;
 
   @ViewChild('map', {read: ElementRef, static: false}) mapRef: ElementRef;
 
   constructor(
     public loadingController: LoadingController, 
     public router: Router,
-    public toastController: ToastController
-  ) { }
+    public toastController: ToastController,
+    private storage: AngularFireStorage,
+    public db: AngularFirestore
+  ) {
+    this.nextday = (this.mydate.setDate(this.mydate.getDate() + 1));
+    this.nextday = new Date(this.nextday).toISOString();
+    this.trip.startdate = this.nextday;
+    this.trip.descriptions = [];
+    this.descriptions.push(''); 
+    this.trip.descriptions.push('');
+    this.trip.latitude = -1.28333;
+    this.trip.longitude = 36.81667;
+    this.trip.slots = 0;
+    this.trip.price = 0;
+  }
+
+  changeslots(change){
+    if(change == "add"){
+      this.trip.slots += 10
+    } else if(change == "subtract"){
+      this.trip.slots -= 10
+    }
+  }
+
+  changeprice(change){
+    if(change == "add"){
+      this.trip.price += 50
+    } else if(change == "subtract"){
+      this.trip.price -= 50
+    }
+  }
 
   myDate: String = new Date().toISOString();
   mydate = new Date();
   dt = new Date();
   nextday;
-  value;
+  tripimg;
   descriptions = [];
   trip:any = JSON.parse('{}');
   kami = false;
+  uploadPercent;
+  downloadURL: Observable<string | null>;
+  myfile;
+
+  comparedates(startdate, enddate){
+    var startingdate:Date = new Date(startdate);
+    var endingdate:Date = new Date(enddate);
+    if(endingdate<startingdate){
+      return false;
+    }
+    return true;
+  }
 
   async presentLoading() {
+    if(!this.comparedates(this.trip.startdate, this.trip.enddate)){
+      const toast = await this.toastController.create({
+        header: 'Please check your dates',
+        message: 'Start date should be before end date!',
+        position: 'bottom',
+        color: 'danger',});
+      await toast.present();
+      setTimeout(()=>{
+        toast.dismiss();
+      }, 5000);
+      return;
+    }
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
       duration: 2000
     });
-    await loading.present();
+    try {
+      loading.present();
+      const path = "files/tripimages/"+this.trip.name;
+      const fileRef = this.storage.ref(path);
+      const task = this.storage.upload(path, this.myfile);
+      // observe percentage changes
+      this.uploadPercent = task.percentageChanges();
+      // get notified when the download URL is available
+      task.snapshotChanges().pipe(
+          finalize(() => {
+            this.downloadURL = fileRef.getDownloadURL();
+            this.downloadURL.subscribe(value => {
+              this.trip.imageURL = value;
+              setTimeout(()=>{
+                this.saveToDatabase(loading);
+              }, 1000)
+            });
+      })
+      )
+      .subscribe(lion=>{
+        loading.present();
+      }); 
+    } catch (error) {
+      this.createtoast(error);
+      console.log(error);
+      loading.dismiss();
+    }    
+  }
 
-    const { role, data } = await loading.onDidDismiss();
-    await this.router.navigate(["/my-trips"]);
+  async saveToDatabase(loading){
+    const loader = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 2000
+    });
+    await loader.present();
+    loading.present();
+    try {
+      await this.db.collection('trips').add(this.trip);
+      await this.includevalidation();
+      this.successToast();
+      this.imageSrc = null;
+      this.descriptions = [];
+      this.trip = JSON.parse('{}');
+      this.trip.startdate = this.nextday;
+      this.trip.descriptions = [];
+      this.descriptions.push('');
+      this.trip.descriptions.push('');
+      this.trip.latitude = -1.28333;
+      this.trip.longitude = 36.81667;
+      this.trip.slots = 0;
+      this.trip.price = 0;
+      loader.dismiss();
+      loading.dismiss();
+    } catch (error) {
+       this.createtoast(error);
+       loading.dismiss();
+    }
+  }
+
+  async successToast() {
+    const toast = await this.toastController.create({
+      header: 'Trip Created',
+      message: "Tap 'View' to display your trips",
+      position: 'bottom',
+      color: 'success',
+      buttons: [
+        {
+          side: 'end',
+          text: 'Back',
+          role: 'cancel',
+          handler: () => {
+            toast.dismiss();
+          }
+        },
+        {
+          side: 'end',
+          text: 'View',
+          handler: () => {
+            toast.dismiss();
+            this.router.navigate(["/my-trips"]);
+          }
+        }
+      ]
+    });
+    toast.present();
   }
 
   ngOnInit() {
-    this.nextday = (this.mydate.setDate(this.mydate.getDate() + 1));
-    this.nextday  = new Date(this.nextday).toISOString();
-    this.trip.descriptions = [];
-    this.descriptions.push('');
-    this.trip.descriptions.push('');
-    this.trip.latitude = -1.28333;
-    this.trip.longitude = 36.81667;
+    this.includevalidation();
   }
 
   readURL(event): void {
     if (event.target.files && event.target.files[0]) {
-      var fullPath = this.value;
-      var filename;
-      if (fullPath) {
-          var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-          filename = fullPath.substring(startIndex);
-          if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
-              filename = filename.substring(1);
-          }
-          //window.alert(filename);
-      }
+      setTimeout(()=>{
         const file = event.target.files[0];
-        
         if(file.size < 10485760){
           const reader = new FileReader();
           reader.onload = e => this.imageSrc = reader.result;
 
           reader.readAsDataURL(file);
+          this.myfile = event.target.files[0];
         }
+      }, 200);
       }
     }
 
@@ -91,11 +218,33 @@ export class CreateTripPage implements OnInit {
     //   this.showmap();
     // }
 
+    async createtoast(message){
+      const toast = await this.toastController.create({
+        header: message,
+        message: message.message,
+        position: 'bottom',
+        color: 'danger',
+        buttons: [
+          {
+            side: 'end',
+            text: 'Back',
+            icon: 'alert',
+            role: 'cancel',
+            handler: () => {
+              this.kami = false;
+              toast.dismiss();
+            }
+          }
+        ]
+      });
+      toast.present();
+    }
+
     addmarkertomap(){
       let position = new google.maps.LatLng(this.trip.latitude, this.trip.longitude);
       let mapMarker = new google.maps.Marker({
         position: position,
-        title: 'Trip Planner',
+        title: this.trip.name || 'Trip Planner',
         draggable:true,
         //icon: { url: '../../../assets/purple-dot.png'},
         latitude: this.trip.latitude,
@@ -227,4 +376,55 @@ export class CreateTripPage implements OnInit {
         this.decide();
       };
     }
+
+    includevalidation(){
+      this.createTripForm = new FormGroup({
+        tripimage: new FormControl('',[
+          Validators.required
+        ]),
+        name: new FormControl('',[
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(50),
+        ]),
+        phoneno: new FormControl('',[
+          Validators.required,
+          Validators.minLength(9),
+          Validators.maxLength(9),
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/)
+        ]),
+        overview: new FormControl('',[
+          Validators.required,
+          Validators.minLength(20),
+          Validators.maxLength(50)
+        ]),
+        startdate: new FormControl('',[
+          Validators.required
+        ]),
+        starttime: new FormControl('',[
+          Validators.required
+        ]),
+        enddate: new FormControl('',[
+          Validators.required
+        ]),
+        endtime: new FormControl('',[
+          Validators.required
+        ]),
+        slots: new FormControl('',[
+          Validators.required,
+          Validators.min(10)
+        ]),
+        price: new FormControl('',[
+          Validators.required,
+          Validators.min(50)
+        ]),
+        description: new FormControl('',[
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(20)
+        ]),
+      });
+    }
+  
+
 }

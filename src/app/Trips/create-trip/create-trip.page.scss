@@ -22,7 +22,12 @@ ion-back-button {
     padding-left: 7%;
     padding-right: 7%;
     margin-top: 5vh;
+    margin-bottom: 5vh;
     padding-bottom: auto;
+}
+
+.centered {
+    text-align: center;
 }
 
 .ion-grid2 {
@@ -38,6 +43,8 @@ ion-back-button {
     margin-left: auto;
     margin-right: auto;
     border-radius: 75px;
+    object-fit: cover;
+    object-position: center;
 }
 
 #mild {

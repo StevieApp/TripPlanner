@@ -8,73 +8,136 @@
 
 <ion-content [fullscreen]="true">
     <div #map *ngIf="kami == true" id="map"></div>
-    <ion-grid *ngIf="kami == false" class="ion-grid">
-        <ion-grid class="ion-grid2">
-            <h3>Create Trip</h3>
-            <ion-list>
-                <img class="image" id="blah" [src]="imageSrc" alt="my image" width="150" height="150" onerror="this
-                .onerror=null;this.src='../../../assets/def.jpg';" /><br>
-                <ion-item lines="full">
-                    <ion-label>File</ion-label>
-                    <ion-input class="filesystem" type="file" (change)="readURL($event)" spellcheck="true" [(ngModel)]="value" accept="image/gif, image/jpeg, image/png" pattern="file"></ion-input>
-                </ion-item>
-                <ion-item lines="full">
-                    <ion-label position="floating">Trip Name</ion-label>
-                    <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
-                </ion-item>
-                <ion-item lines="full" tappable (click)="showmap()">
-                    <ion-label position="floating">
-                        <ion-icon name="location-outline"></ion-icon>
-                        Location
-                    </ion-label>
-                    <ion-input type="text" spellcheck="true" pattern="text"></ion-input>
-                </ion-item>
-                <ion-item>
-                    <ion-label>+254</ion-label>
-                    <ion-input rows="4" placeholder="eg.0725603808"></ion-input>
-                </ion-item>
-                <ion-item>
-                    <ion-label position="stacked">Overview</ion-label>
-                    <ion-textarea rows="4" placeholder="Overview"></ion-textarea>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Start Date</ion-label>
-                    <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Start Time</ion-label>
-                    <ion-datetime display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
-                </ion-item>
-                <ion-item>
-                    <ion-label>End Date</ion-label>
-                    <ion-datetime displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Description</ion-label>
-                    <ion-icon color="warning" *ngIf="descriptions.length<=6" (click)="additem()" name="add-circle-outline" slot="end" tappable>
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                    </ion-icon>
-                </ion-item>
-                <ion-row *ngFor="let description of descriptions;let i = index;">
-                    <ion-col size="10">
-                        <ion-item>
-                            <ion-input type="text" [(ngModel)]="trip.descriptions[i]" spellcheck="true" placeholder="{{i+1}}. Add description" value="{{descriptions[i]}}" pattern="text"></ion-input>
-                        </ion-item>
-                    </ion-col>
-                    <ion-col size="2" tappable *ngIf="(i == (descriptions.length-1))&&i!=0" (click)="removeitem()">
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                        <ion-label class="whole">
-                            <ion-icon color="danger" name="remove-circle-outline">
-                            </ion-icon>
+    <form [formGroup]="createTripForm" (ngSubmit)="presentLoading()" novalidate>
+        <ion-grid *ngIf="kami == false" class="ion-grid">
+            <ion-grid class="ion-grid2">
+                <h3>Create Trip</h3>
+                <ion-list>
+                    <img class="image" id="blah" [src]="imageSrc" alt="my image" width="150" height="150" onerror="this.onerror=null;this.src='../../../assets/def.jpg';" /><br>
+                    <ion-item lines="full">
+                        <ion-label>File</ion-label>
+                        <ion-input formControlName="tripimage" class="filesystem" type="file" (change)="readURL($event)" spellcheck="true" [(ngModel)]="tripimg" accept="image/gif, image/jpeg, image/png"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label position="floating">Trip Name</ion-label>
+                        <ion-input formControlName="name" [(ngModel)]="trip.name" type="text" spellcheck="true"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full" tappable (click)="showmap()">
+                        <ion-label position="floating">
+                            <ion-icon name="location-outline"></ion-icon>
+                            Location
                         </ion-label>
-                    </ion-col>
-                </ion-row>
-
-            </ion-list>
-            <ion-button (click)="presentLoading()" type="submit" color="secondary" expand="block">
-                Create Trip
-                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-            </ion-button>
+                        <ion-input type="text" spellcheck="true"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>Phone Number</ion-label>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>+254</ion-label>
+                        <ion-input formControlName="phoneno" [(ngModel)]="trip.phonenumber" type="tel" placeholder="eg.722107868"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label position="stacked">Overview</ion-label>
+                        <ion-textarea formControlName="overview" [(ngModel)]="trip.overview" rows="4" placeholder="Overview. At least 20 characters"></ion-textarea>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>Start Date</ion-label>
+                        <ion-datetime formControlName="startdate" [(ngModel)]="trip.startdate" displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>Start Time</ion-label>
+                        <ion-datetime formControlName="starttime" [(ngModel)]="trip.startdate" display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>End Date</ion-label>
+                        <ion-datetime formControlName="enddate" [(ngModel)]="trip.enddate" displayFormat="MM/DD/YYYY" min="{{trip.startdate}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label>End Time</ion-label>
+                        <ion-datetime formControlName="endtime" [(ngModel)]="trip.enddate" display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
+                    </ion-item>
+                    <ion-item lines="full">
+                        <ion-label class="centered">Slots</ion-label>
+                    </ion-item>
+                    <ion-row>
+                        <ion-col size="3">
+                            <ion-item lines="full">
+                                <ion-label>
+                                    <ion-icon (click)="changeslots('subtract')" color="danger" name="remove-circle-outline" tappable>
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </ion-icon>
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-item lines="full">
+                                <ion-input class="centered" formControlName="slots" [(ngModel)]="trip.slots" type="number"></ion-input>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="3">
+                            <ion-item lines="full">
+                                <ion-label>
+                                    <ion-icon (click)="changeslots('add')" color="success" name="add-circle-outline" tappable>
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </ion-icon>
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                    <ion-item lines="full">
+                        <ion-label class="centered">Price</ion-label>
+                    </ion-item>
+                    <ion-row>
+                        <ion-col size="3">
+                            <ion-item lines="full">
+                                <ion-label>
+                                    <ion-icon (click)="changeprice('subtract')" color="danger" name="remove-circle-outline" tappable>
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </ion-icon>
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-item lines="full">
+                                <ion-input class="centered" formControlName="price" [(ngModel)]="trip.price" type="number"></ion-input>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="3">
+                            <ion-item lines="full">
+                                <ion-label>
+                                    <ion-icon (click)="changeprice('add')" color="success" name="add-circle-outline" tappable>
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </ion-icon>
+                                </ion-label>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                    <ion-item lines="full">
+                        <ion-label>Description</ion-label>
+                        <ion-icon color="warning" *ngIf="descriptions.length<=6" (click)="additem()" name="add-circle-outline" slot="end" tappable>
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-icon>
+                    </ion-item>
+                    <ion-row *ngFor="let description of descriptions;let i = index;">
+                        <ion-col size="10">
+                            <ion-item lines="full">
+                                <ion-input formControlName="description" rows="2" type="text" [(ngModel)]="trip.descriptions[i]" spellcheck="true" placeholder="{{i+1}}. Add description. 10 - 20 characters" value="{{descriptions[i]}}"></ion-input>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="2" tappable *ngIf="(i == (descriptions.length-1))&&i!=0" (click)="removeitem()">
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                            <ion-label class="whole">
+                                <ion-icon color="danger" name="remove-circle-outline">
+                                </ion-icon>
+                            </ion-label>
+                        </ion-col>
+                    </ion-row>
+                </ion-list>
+                <ion-button [disabled]="!createTripForm.valid" type="submit" color="secondary" expand="block">
+                    Create Trip
+                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                </ion-button>
+            </ion-grid>
         </ion-grid>
-    </ion-grid>
+    </form>
 </ion-content>

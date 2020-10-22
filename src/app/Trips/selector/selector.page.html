@@ -21,4 +21,9 @@
         <ion-chip routerLink="/featured-trips" color="primary">Featured Trips</ion-chip>
         <ion-chip routerLink="/booked-trips" color="primary">Booked Trips</ion-chip>
     </div>
+    <ion-fab (click)="signout()" vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button>
+            <ion-icon name="log-out-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </ion-content>
