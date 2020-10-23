@@ -6,21 +6,50 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-    <ion-content fullscreen>
-        <ion-card *ngFor="let box of boxes; let i = index;">
-            <ion-card-header class="bgimage"></ion-card-header>
+    <ion-content *ngIf="!trips" fullscreen>
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </ion-content>
+    <ion-content *ngIf="trips" fullscreen>
+        <ion-card *ngFor="let trip of trips | async; let i = index;">
+            <ion-card-header class="bgimage" [ngStyle]="
+                {
+                    'background-image': 'url('+trip.imageURL+')'
+                }
+            "></ion-card-header>
             <ion-card-header>
                 <ion-card-subtitle>Destination</ion-card-subtitle>
                 <ion-card-title>
-                    Madison, WI
-                    <ion-icon class="boo" tappable *ngIf="!box.open" (click)="toggleSection(i)" name="caret-down-outline"></ion-icon>
-                    <ion-icon class="boo" tappable *ngIf="box.open" (click)="toggleSection(i)" name="caret-up-outline"></ion-icon>
+                    {{trip.name}}
+                    <ion-icon class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open" name="caret-down-outline"></ion-icon>
+                    <ion-icon class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open" name="caret-up-outline"></ion-icon>
                 </ion-card-title>
             </ion-card-header>
-            <ion-card-content *ngIf="box.open">
-                Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
+            <ion-card-content *ngIf="trip.open">
+                {{trip.overview}}
                 <br>
-                <ion-button color="primary" expand="block">Edit
+                <div *ngIf="remtime(trip.startdate) | async as time">
+                    <div *ngIf="time == 'EXPIRED'">
+                        <strong>Remaining Time:
+                                <ion-text color="danger">{{time}}</ion-text>
+                            </strong>
+                    </div>
+                    <div *ngIf="time != 'EXPIRED'">
+                        <strong>Remaining Time:
+                                <ion-text color="success">{{time}}</ion-text>
+                            </strong>
+                    </div>
+                </div>
+                <strong>Tips</strong>
+                <div *ngFor="let description of trip.descriptions; let g = index;">
+                    <p>{{g+1}}. {{description}}</p>
+                </div>
+                <p></p>
+                <br>
+                <ion-button color="primary" expand="block">Edit Slots
                     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                 </ion-button>
                 <ion-button color="danger" expand="block">Cancel
@@ -29,3 +58,4 @@
             </ion-card-content>
         </ion-card>
     </ion-content>
+</ion-content>

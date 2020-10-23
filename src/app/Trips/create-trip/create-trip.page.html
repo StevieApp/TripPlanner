@@ -16,7 +16,7 @@
                     <img class="image" id="blah" [src]="imageSrc" alt="my image" width="150" height="150" onerror="this.onerror=null;this.src='../../../assets/def.jpg';" /><br>
                     <ion-item lines="full">
                         <ion-label>File</ion-label>
-                        <ion-input formControlName="tripimage" class="filesystem" type="file" (change)="readURL($event)" spellcheck="true" [(ngModel)]="tripimg" accept="image/gif, image/jpeg, image/png"></ion-input>
+                        <ion-input class="centered" formControlName="tripimage" class="filesystem" type="file" (change)="readURL($event)" spellcheck="true" [(ngModel)]="tripimg" accept="image/gif, image/jpeg, image/png"></ion-input>
                     </ion-item>
                     <ion-item lines="full">
                         <ion-label position="floating">Trip Name</ion-label>

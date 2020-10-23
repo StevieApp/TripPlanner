@@ -6,23 +6,54 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-    <ion-content fullscreen>
-        <ion-card *ngFor="let box of boxes; let i = index;">
-            <ion-card-header class="bgimage"></ion-card-header>
-            <ion-card-header>
-                <ion-card-subtitle>Destination</ion-card-subtitle>
-                <ion-card-title>
-                    Madison, WI
-                    <ion-icon class="boo" tappable *ngIf="!box.open" (click)="toggleSection(i)" name="caret-down-outline"></ion-icon>
-                    <ion-icon class="boo" tappable *ngIf="box.open" (click)="toggleSection(i)" name="caret-up-outline"></ion-icon>
-                </ion-card-title>
-            </ion-card-header>
-            <ion-card-content *ngIf="box.open">
-                Founded in 1829 on an isthmus between Lake Monona and Lake Mendota, Madison was named the capital of the Wisconsin Territory in 1836.
-                <br>
-                <ion-button expand="block">Book
-                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                </ion-button>
-            </ion-card-content>
-        </ion-card>
+    <ion-content *ngIf="!trips && !zero" fullscreen>
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
     </ion-content>
+    <ion-content *ngIf="trips && !zero" fullscreen>
+        <ion-grid *ngFor="let trip of trips | async; let i = index;">
+            <ion-card *ngIf="!(trip.planner.userid == uid)">
+                <ion-card-header class="bgimage" [ngStyle]="
+                    {
+                        'background-image': 'url('+trip.imageURL+')'
+                    }
+                "></ion-card-header>
+                <ion-card-header>
+                    <ion-card-subtitle>Destination</ion-card-subtitle>
+                    <ion-card-title>
+                        {{trip.name}}
+                        <ion-icon class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open" name="caret-down-outline"></ion-icon>
+                        <ion-icon class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open" name="caret-up-outline"></ion-icon>
+                    </ion-card-title>
+                </ion-card-header>
+                <ion-card-content *ngIf="trip.open">
+                    {{trip.overview}}
+                    <br>
+                    <div *ngIf="remtime(trip.startdate) | async as time">
+                        <div *ngIf="time == 'EXPIRED'">
+                            <strong>Remaining Time:
+                                <ion-text color="danger">{{time}}</ion-text>
+                            </strong>
+                        </div>
+                        <div *ngIf="time != 'EXPIRED'">
+                            <strong>Remaining Time:
+                                <ion-text color="success">{{time}}</ion-text>
+                            </strong>
+                        </div>
+                    </div>
+                    <ion-button expand="block">Book
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-button>
+                </ion-card-content>
+            </ion-card>
+        </ion-grid>
+    </ion-content>
+    <ion-content *ngIf="zero" fullscreen>
+        <div id="container">
+            <strong>There are no featured trips <b class="adding">☹</b></strong>
+        </div>
+    </ion-content>
+</ion-content>

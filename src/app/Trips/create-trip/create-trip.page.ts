@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonBackButtonDelegate, LoadingController } from '@ionic/angular';
 import { ViewChild, ElementRef } from '@angular/core';
@@ -8,6 +8,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 declare var google: any;
 
@@ -20,6 +21,8 @@ export class CreateTripPage implements OnInit {
   imageSrc;
   map: any;
   createTripForm: FormGroup;
+  user;
+  getuser
 
   @ViewChild('map', {read: ElementRef, static: false}) mapRef: ElementRef;
 
@@ -28,7 +31,8 @@ export class CreateTripPage implements OnInit {
     public router: Router,
     public toastController: ToastController,
     private storage: AngularFireStorage,
-    public db: AngularFirestore
+    public db: AngularFirestore,
+    public afAuth: AngularFireAuth
   ) {
     this.nextday = (this.mydate.setDate(this.mydate.getDate() + 1));
     this.nextday = new Date(this.nextday).toISOString();
@@ -40,6 +44,30 @@ export class CreateTripPage implements OnInit {
     this.trip.longitude = 36.81667;
     this.trip.slots = 0;
     this.trip.price = 0;
+    this.trip.planner = JSON.parse('{}');
+  }
+  getUser(){
+    try{
+      this.afAuth.user.subscribe(
+        currentuser=>{
+          if (currentuser.uid){
+            var go = this.db.doc('users/'+currentuser.uid).valueChanges().subscribe(
+              elementor=>{
+                if(elementor!=undefined){
+                  this.user = elementor;
+                  this.trip.planner = {
+                  userid: currentuser.uid,
+                  username: this.user.username
+                }
+              }
+              }
+            );
+          }
+        }
+      );
+    } catch(error){
+      this.createtoast(error);
+    }
   }
 
   changeslots(change){
@@ -82,14 +110,30 @@ export class CreateTripPage implements OnInit {
   async presentLoading() {
     if(!this.comparedates(this.trip.startdate, this.trip.enddate)){
       const toast = await this.toastController.create({
-        header: 'Please check your dates',
-        message: 'Start date should be before end date!',
+        header: 'Please check your dates!',
+        message: 'Start date should be before end date',
         position: 'bottom',
         color: 'danger',});
       await toast.present();
       setTimeout(()=>{
         toast.dismiss();
       }, 5000);
+      return;
+    }
+    if(this.trip.planner.username== (undefined||null)){
+      this.afAuth.signOut();
+      const toast = await this.toastController.create({
+        header: 'Session Timeout!',
+        message: 'Please login in again',
+        position: 'bottom',
+        color: 'danger',});
+      await toast.present();
+      setTimeout(()=>{
+        toast.dismiss();
+      }, 5000);
+      setTimeout(()=>{
+        this.router.navigate(["/home"]);
+      }, 500);
       return;
     }
     const loading = await this.loadingController.create({
@@ -133,7 +177,6 @@ export class CreateTripPage implements OnInit {
       duration: 2000
     });
     await loader.present();
-    loading.present();
     try {
       await this.db.collection('trips').add(this.trip);
       await this.includevalidation();
@@ -149,8 +192,9 @@ export class CreateTripPage implements OnInit {
       this.trip.longitude = 36.81667;
       this.trip.slots = 0;
       this.trip.price = 0;
+      this.trip.planner = JSON.parse('{}');
+      this.getUser();
       loader.dismiss();
-      loading.dismiss();
     } catch (error) {
        this.createtoast(error);
        loading.dismiss();
@@ -187,6 +231,19 @@ export class CreateTripPage implements OnInit {
 
   ngOnInit() {
     this.includevalidation();
+    this.getUser();
+  }
+
+  async toaster(){
+    const toast = await this.toastController.create({
+      header: this.trip.planner.userid,
+      message: this.trip.planner.username,
+      position: 'bottom',
+      color: 'success',});
+    toast.present();
+    setTimeout(()=>{
+      toast.dismiss();
+    }, 1000)
   }
 
   readURL(event): void {
@@ -420,7 +477,7 @@ export class CreateTripPage implements OnInit {
         description: new FormControl('',[
           Validators.required,
           Validators.minLength(10),
-          Validators.maxLength(20)
+          Validators.maxLength(30)
         ]),
       });
     }

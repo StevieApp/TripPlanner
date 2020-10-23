@@ -139,9 +139,9 @@ export class RegisterPage implements OnInit {
       ]),
       phonenumber: new FormControl('',[
         Validators.required,
-        Validators.pattern(/[0-9]*/),
-        Validators.minLength(7),
-        Validators.maxLength(11)
+        Validators.minLength(9),
+        Validators.maxLength(9),
+        Validators.pattern(/^-?(0|[1-9]\d*)?$/)
       ]),
       username: new FormControl('',[
         Validators.required,
