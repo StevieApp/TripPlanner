@@ -228,7 +228,6 @@ export class CreateTripPage implements OnInit {
           {
             side: 'end',
             text: 'Back',
-            icon: 'alert',
             role: 'cancel',
             handler: () => {
               this.kami = false;

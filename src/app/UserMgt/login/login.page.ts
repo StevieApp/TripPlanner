@@ -74,8 +74,8 @@ export class LoginPage implements OnInit {
 
   async successToast() {
     const toast = await this.toastController.create({
-      header: 'Successful Login',
-      message: 'Welcome!',
+      header: 'Successful Login!',
+      message: 'Welcome',
       position: 'bottom',
       color: 'success'
     });

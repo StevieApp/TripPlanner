@@ -82,8 +82,8 @@ export class RegisterPage implements OnInit {
 
   async successToast() {
     const toast = await this.toastController.create({
-      header: 'Successful Registration',
-      message: 'View Email for verification link!',
+      header: 'Successful Registration!',
+      message: 'View Email for verification link',
       position: 'bottom',
       color: 'success'
     });
@@ -95,7 +95,7 @@ export class RegisterPage implements OnInit {
 
   async presentToastWithOptions(message) {
     const toast = await this.toastController.create({
-      header: 'Could Not Register',
+      header: 'Could Not Register!',
       message: message,
       position: 'bottom',
       color: 'danger'
