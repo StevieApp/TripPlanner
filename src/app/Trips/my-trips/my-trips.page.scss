@@ -53,6 +53,7 @@ ion-toolbar {
 }
 
 .bgimage {
+    background-image: url('../../../assets/def.jpg');
     width: 100%;
     background-position: center;
     background-size: cover;
@@ -60,8 +61,17 @@ ion-toolbar {
     background-repeat: no-repeat;
 }
 
+.bigger {
+    font-size: 28px;
+}
+
 .boo {
     float: right;
+    text-align: center;
+}
+
+.woot {
+    margin: 0px;
 }
 
 .spinner {

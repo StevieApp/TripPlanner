@@ -28,6 +28,10 @@ ion-toolbar {
     float: right;
 }
 
+.woot {
+    margin: 0px;
+}
+
 .spinner {
     margin: 80% auto 0;
     width: 100%;
@@ -87,9 +91,13 @@ a {
     margin-top: 20px;
     font-size: 30px;
     padding-bottom: 0px;
-    margin-bottom: 0px;
+    margin: 0;
     font-weight: 50;
     line-height: 1.2rem;
+}
+
+.bigger {
+    font-size: 28px;
 }
 
 @-webkit-keyframes sk-bouncedelay {

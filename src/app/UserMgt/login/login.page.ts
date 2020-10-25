@@ -34,9 +34,11 @@ export class LoginPage implements OnInit {
     try {
       const res = await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
       if(res.user.emailVerified == true){
-        const { role, data } = await loading.onDidDismiss();
-        await this.successToast();
-        await this.router.navigate(["/selector"]);
+        setTimeout(()=>{
+          loading.dismiss();
+          this.successToast();
+          this.router.navigate(["/selector"]);
+        }, 500);
       }else{
         const { role, data } = await loading.onDidDismiss();
         await res.user.sendEmailVerification();

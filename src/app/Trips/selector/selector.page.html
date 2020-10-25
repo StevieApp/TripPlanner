@@ -21,10 +21,11 @@
         <ion-chip routerLink="/featured-trips" color="primary">Featured Trips</ion-chip>
         <ion-chip routerLink="/booked-trips" color="primary">Booked Trips</ion-chip>
     </div>
-    <ion-fab (click)="signout()" vertical="bottom" horizontal="end" slot="fixed">
-        <ion-text color="danger">Logout</ion-text>
-        <ion-fab-button color="danger">
-            <ion-icon class="rotator" name="log-out-outline"></ion-icon>
-        </ion-fab-button>
+    <ion-fab class="bigger" (click)="signout()" vertical="bottom" horizontal="end" slot="fixed">
+        <ion-chip color="danger" class="marginer">
+            <ion-text style="color:#ffffff;" class="trysmall">Logout</ion-text>
+            <ion-icon style="color:#ffffff;" class="trysmall2" name="log-out"></ion-icon>
+        </ion-chip>
+        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
     </ion-fab>
 </ion-content>

@@ -22,10 +22,14 @@
             "></ion-card-header>
             <ion-card-header>
                 <ion-card-subtitle>Destination</ion-card-subtitle>
-                <ion-card-title>
+                <ion-card-title class="bigger">
+                    <ion-chip class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open">
+                        <ion-icon class="woot" tappable name="caret-up-outline"></ion-icon>
+                    </ion-chip>
+                    <ion-chip class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open">
+                        <ion-icon class="woot" tappable name="caret-down-outline"></ion-icon>
+                    </ion-chip>
                     {{trip.name}}
-                    <ion-icon class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open" name="caret-down-outline"></ion-icon>
-                    <ion-icon class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open" name="caret-up-outline"></ion-icon>
                 </ion-card-title>
             </ion-card-header>
             <ion-card-content *ngIf="trip.open">

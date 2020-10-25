@@ -19,8 +19,29 @@ ion-chip {
     border-radius: 25px;
 }
 
-.rotator {
-    transform: rotate(180deg);
+.bigger {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 130px;
+    border-radius: 50px;
+    outline: none;
+    background-color: #ed576b;
+    text-align: center;
+    -webkit-box-shadow: 2px 0px 34px -13px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 0px 34px -13px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 0px 34px -13px rgba(0, 0, 0, 0.75);
+}
+
+.maginer {
+    width: 100%;
+}
+
+.trysmall {
+    font-size: 22px;
+}
+
+.trysmall2 {
+    font-size: 29px;
 }
 
 #container strong {
