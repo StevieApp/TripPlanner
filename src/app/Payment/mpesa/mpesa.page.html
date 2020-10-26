@@ -1,0 +1,15 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>MPESA</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div id="container">
+        <ion-card>
+            <img src="../../../assets/MPESA.png" />
+            <ion-card-title>Ksh. {{price}}</ion-card-title>
+            <ion-button (click)="makepayment()" color="success">PAY</ion-button>
+        </ion-card>
+    </div>
+</ion-content>

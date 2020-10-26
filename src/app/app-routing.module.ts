@@ -60,6 +60,12 @@ const routes: Routes = [
     canActivate: [AngularFireAuthGuard], 
     data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
+  {
+    path: 'mpesa',
+    loadChildren: () => import('./Payment/mpesa/mpesa.module').then( m => m.MPESAPageModule),
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLogin }
+  },
 ];
 
 @NgModule({
