@@ -106,7 +106,7 @@ export class MPESAPage implements OnInit {
       if (params.price) {
         this.price = params.price;
         btoa(this.price);
-        //console.log(params);
+        console.log(params);
       } else{
         this.router.navigate(['/featured-trips']);
       }

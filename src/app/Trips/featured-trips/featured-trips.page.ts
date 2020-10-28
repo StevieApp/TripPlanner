@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AlertController, LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Button } from 'protractor';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-featured-trips',
@@ -29,7 +30,18 @@ export class FeaturedTripsPage implements OnInit {
         }
     });
     setTimeout(()=>{
-      this.trips = afs.collection('trips').valueChanges();
+      //this.trips = this.afs.collection('trips').valueChanges();
+      this.trips = afs.collection('trips').snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          const data:any = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          data.id = id;
+          return data;
+        }))
+      );
+      // .snapshotChanges() returns a DocumentChangeAction[], which contains
+      // a lot of information about "what happened" with each change. If you want to
+      // get the data and the id use the map operator.
       this.trips.subscribe(tirip=>{
         if(Array.isArray(tirip)){
           var cor = tirip.filter(this.isMine);
@@ -224,7 +236,12 @@ export class FeaturedTripsPage implements OnInit {
           text: 'Okay',
           handler: () => {
             console.log('Confirm Okay');
-            this.router.navigate(['/mpesa'], { queryParams: { price: slots*trip.price }})
+            this.router.navigate(['/mpesa'], { queryParams: { 
+              price: slots*trip.price, 
+              bookuid: window.sessionStorage.getItem('uid'), 
+              slots: slots,
+              trip: trip.id
+            }});
           }
         }
       ]
