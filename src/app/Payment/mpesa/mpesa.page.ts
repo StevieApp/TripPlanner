@@ -3,9 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MPESAIntegrationService } from '../../services/MPESA/mpesaintegration.service'
 import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
-import { Platform, ToastController } from '@ionic/angular';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { collectExternalReferences } from '@angular/compiler';
 
 @Component({
   selector: 'app-mpesa',
@@ -22,18 +26,79 @@ export class MPESAPage implements OnInit {
     private toastController: ToastController,
     private nativeHttp: HTTP,
     private plt: Platform,
-    private http: HTTP
+    private http: HTTP,
+    private afAuth: AngularFireAuth,
+    public db: AngularFirestore
   ) {
     this.http.setDataSerializer("json");
+    this.afAuth.user.subscribe(
+      currentuser=>{
+        if(currentuser){
+          currentuser.uid;
+          this.db.doc('users/'+currentuser.uid).valueChanges().subscribe(
+            elementor=>{
+              if(elementor!=undefined){
+                this.user = elementor;
+              }
+            },
+            error =>{
+              console.log(error);
+            }
+          );
+        }
+    });
   }
 
   price;
+  paying=false;
+  user;
   ConsumerKey = 'xMWUIZdaaSwdN9GaieACukGc53I0BDwh';
   ConsumerSecret = 'nM3xnt512hMGrkV6';
   key = this.getkey();
+  othernum;
+  shownumber = false;
+  paymentForm: FormGroup;
+  numberchoice = "myphone";
     
   getkey(){
       return btoa(this.ConsumerKey + ':' + this.ConsumerSecret);
+  }
+
+  private othernumberFormat = [
+    Validators.maxLength(12),
+    Validators.minLength(12),
+    Validators.pattern(/2547[0-9]/)
+  ];
+  private othernumberFormatReq = [
+    Validators.maxLength(12),
+    Validators.minLength(12),
+    Validators.pattern(/2547[0-9]/),
+    Validators.required
+  ];
+
+  includevalidation(){
+    if(this.shownumber==true){
+      this.paymentForm = new FormGroup({
+        choice: new FormControl(this.numberchoice,[
+          Validators.required
+        ]),
+        othernumber: new FormControl('', this.othernumberFormatReq)
+      });
+    } else {
+      this.paymentForm = new FormGroup({
+        choice: new FormControl(this.numberchoice,[
+          Validators.required
+        ]),
+        othernumber: new FormControl('', this.othernumberFormat)
+      });
+    }
+    
+  }
+
+  makechanges(){
+    setTimeout(()=>{
+      this.includevalidation();
+    },50)
   }
 
   ngOnInit() {
@@ -46,21 +111,47 @@ export class MPESAPage implements OnInit {
         this.router.navigate(['/featured-trips']);
       }
     });
+    this.includevalidation();
   }
 
   makepayment(){
-    //this.plt.is('cordova') ? this.mpesaIntegral() : this.standardcall();
-    console.log(this.plt.platforms.name);
+    this.plt.is('cordova') ? this.mpesaIntegral() : this.standardcall();
     //this.standardcall();
-    this.mpesaIntegral();
+    //this.mpesaIntegral();
   }
+  
 
   async successToast(body) {
     const toast = await this.toastController.create({
       header: body,
       message: body,
       position: 'bottom',
-      color: 'denger',
+      color: 'danger',
+      buttons: [
+        {
+          side: 'end',
+          text: 'Ok',
+          icon: 'alert',
+          role: 'cancel',
+          handler: () => {
+            toast.dismiss();
+          }
+        }
+      ]
+    }
+    );
+    toast.present();
+    setTimeout(()=>{
+      toast.dismiss();
+    }, 4000);
+  }
+  
+  async actualsuccessToast(body) {
+    const toast = await this.toastController.create({
+      header: body,
+      message: body,
+      position: 'bottom',
+      color: 'success',
       buttons: [
         {
           side: 'end',
@@ -83,15 +174,12 @@ export class MPESAPage implements OnInit {
   async standardcall(){
     this.MPESAIntegrationService.getToken().subscribe(event => {
       if (event instanceof HttpResponse) {
-        console.log(event.body);
         this.successToast(event.body);
       }
       this.successToast(event.type);
-      console.log(event);
     },
     (error) => {        
       var errorMessage = error;
-      console.log(errorMessage);
       this.successToast(error.message)
       //throw error;   //You can also throw the error to a global error handler
     }
@@ -103,7 +191,20 @@ export class MPESAPage implements OnInit {
     // headers.append('Authorization', 'Basic '+ this.key)
     // headers.append('Content-Type', 'application/json');
     // headers.append('Host', 'sandbox.safaricom.co.ke');
-    //console.log(headers);
+    this.paying = true;
+    var paymentnum;
+    var savednum = this.user.phonenumber;
+    if(this.shownumber==true){
+      paymentnum = this.othernum;
+    } else{
+      if(this.user.country != +254){
+        this.successToast('Saved number is not Kenyan');
+        this.paying= false;
+        return;
+      } else{
+        paymentnum = 254+savednum.replace(/0/, '');
+      }
+    }
     let headers = {
       'Authorization' : 'Basic '+ this.key,
       'Content-Type' : 'application/json',
@@ -115,18 +216,16 @@ export class MPESAPage implements OnInit {
     }
   let nativeCall = this.nativeHttp.get('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {}, headers);
     from(nativeCall).pipe().subscribe(data=>{
-      console.log(data.data)
       //this.successToast(data.data);
-      this.mpesapay(JSON.parse(data.data).access_token);
+      this.mpesapay(JSON.parse(data.data).access_token, paymentnum);
     }, err=>{
-      console.log(err)
-      JSON.stringify(err)
+      this.paying = false;
       this.successToast(err.error);
     });
   }
 
   //https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
-  async mpesapay(token){
+  async mpesapay(token, paymentnum){
     let ms = new Date().toISOString().slice(0,19).replace(/T/, '').replace(/:/,'').replace(/-/,'')
     .replace(/-/,'').replace(/ /, '').replace(/:/,'').trim();
     var passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
@@ -144,30 +243,77 @@ export class MPESAPage implements OnInit {
       "Timestamp":ms,
       "TransactionType":"CustomerPayBillOnline",
       "Amount":"1",
-      "PartyA":"254725603808",
+      "PartyA":paymentnum,
       "PartyB":"174379",
-      "PhoneNumber":"254725603808",
+      "PhoneNumber":paymentnum,
       "CallBackURL":"https://reaphoster.web.app",
       "AccountReference":"TripPlanner",
       "TransactionDesc":"you really gave me hell bruuuh"
     };
     //var jolt  = new Buffer(shortcode+passkey+ms).toString('base64');
     //.replace(/{/, '').replace(/}/, '');
-    console.log(JSON.stringify(myreqjson));
     let nativeCall = this.nativeHttp.post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', myreqjson, headers);
     from(nativeCall).pipe().subscribe(data=>{
-      console.log(data.data)
-      //this.successToast(data.data);
-      this.mpesapay(JSON.parse(data.data));
+      this.checkpayment(JSON.parse(data.data), pwd, ms, token);
     }, err=>{
-      console.log(err)
-      JSON.stringify(err)
       if(err.error.toString().includes('Spike')){
         this.successToast('Too many requests. Wait a few minutes...');
-      } else if(!(err.error.toString().includes('Invalid Access Token'))){
-        this.successToast('Issue while processing payment'); 
+        setTimeout(()=>{
+          this.paying = false;
+        }, 2000);
+        this.paying = false;
+      }else if((err.error.toString().includes('CCID found on NMS'))){
+        this.successToast('Number cannot be used for payment'); 
+        this.paying = false;
+      } else{
+        this.successToast('Issue while processing payment');
+        this.paying = false; 
       }
     });
+  }
+
+  async checkpayment(mydata, pwd, time, token){
+    var shortcode = "174379";
+    let headers = {
+      'Authorization' : 'Bearer '+ token,
+      'Content-Type' : 'application/json',
+      'cache-control': 'no-store'
+    }
+    var reqjson ={
+      "BusinessShortCode": shortcode,
+      "Password": pwd,
+      "Timestamp": time,
+      "CheckoutRequestID": mydata.CheckoutRequestID
+    }
+    setTimeout(()=>{
+      let nativeCall = this.nativeHttp.post('https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query', reqjson, headers);
+      from(nativeCall).pipe().subscribe(data=>{
+        if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('successfully')){
+          this.actualsuccessToast('Payment successful');
+          setTimeout(()=>{
+            this.paying = false;
+            this.router.navigate(['/booked-trips']);
+          }, 1000);
+        }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('cancelled') 
+        || JSON.stringify(JSON.parse(data.data).ResultDesc).includes('timeout')){
+          this.successToast('Payment did not go through');
+          this.paying = false;
+        }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('timeout')){
+          this.successToast('Payment did not go through');
+          this.paying = false;
+        }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('Limited')){
+          this.successToast('Payment did not go through');
+          this.paying = false;
+        }
+      }, err=>{
+        if(JSON.stringify(err.error).includes('being processed')){
+          this.checkpayment(mydata, pwd, time, token);
+        } else{
+          this.successToast('Issue while confirming payment. Check your booked trips'); 
+          this.router.navigate(['/booked-trips']);
+        }
+      });
+    }, 2000);
   }
 
 }

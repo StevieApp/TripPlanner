@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { IonBackButtonDelegate, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-booked-trips',
@@ -16,6 +17,7 @@ export class BookedTripsPage implements OnInit {
     public afAuth: AngularFireAuth, 
     public toastController: ToastController,
     public router: Router,
+    private platform: Platform 
   ){
     this.afAuth.user.subscribe(
       currentuser=>{
@@ -25,8 +27,49 @@ export class BookedTripsPage implements OnInit {
     });
     setTimeout(()=>{
       this.trips = afs.collection('trips').valueChanges();
+      this.trips.subscribe(tirip=>{
+        if(Array.isArray(tirip)){
+          var cor = tirip;
+          if(cor.length==0){
+            this.zero = true;
+          }
+        }
+      });
     }, 5000)
   }
+
+  zero = false;
+  subscription;
+  ngAfterViewInit() {
+    this.subscription = this.platform.backButton.subscribe(hum => {
+      hum.register(0,()=>{
+        this.router.navigate(["/home"]);
+      });
+    });
+  }
+
+  @ViewChild(IonBackButtonDelegate, { static: false }) backButton: IonBackButtonDelegate;
+
+    ionViewDidEnter() {
+      this.backButton.onClick = () => {
+        this.router.navigate(["/home"]);
+      };
+    }
+
+  ionViewWillLeave(){ 
+    this.subscription.unsubscribe(); 
+  }
+
+  timez(countDownDate): Observable<any>{
+    var timer = new Observable(observer => {
+      var d:any = new Date(countDownDate);
+      d = d.toUTCString();
+      observer.next(d);
+      observer.complete();
+    });
+    return timer;
+  }
+
   trips;
   uid;
   i=0;

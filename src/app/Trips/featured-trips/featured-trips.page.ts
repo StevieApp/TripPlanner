@@ -3,7 +3,7 @@ import { async } from '@angular/core/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Button } from 'protractor';
 import { Observable } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class FeaturedTripsPage implements OnInit {
     private toastController: ToastController,
     private router: Router,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private platform: Platform
   ){
     this.afAuth.user.subscribe(
       currentuser=>{
@@ -39,6 +39,19 @@ export class FeaturedTripsPage implements OnInit {
         }
       });
     }, 5000)
+  }
+
+  subscription;
+  ngAfterViewInit() {
+    this.subscription = this.platform.backButton.subscribe(hum => {
+      hum.register(0,()=>{
+        this.router.navigate(["/home"]);
+      });
+    });
+  }
+
+  ionViewWillLeave(){ 
+    this.subscription.unsubscribe(); 
   }
   trips;
   trrips;
@@ -87,6 +100,16 @@ export class FeaturedTripsPage implements OnInit {
           }
         });
       }, 60000);
+    });
+    return timer;
+  }
+
+  timez(countDownDate): Observable<any>{
+    var timer = new Observable(observer => {
+      var d:any = new Date(countDownDate);
+      d = d.toUTCString();
+      observer.next(d);
+      observer.complete();
     });
     return timer;
   }

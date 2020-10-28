@@ -1,6 +1,7 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>MPESA</ion-title>
+        <ion-back-button slot="end"></ion-back-button>
     </ion-toolbar>
 </ion-header>
 
@@ -9,7 +10,38 @@
         <ion-card>
             <img src="../../../assets/MPESA.png" />
             <ion-card-title>Ksh. {{price}}</ion-card-title>
-            <ion-button (click)="makepayment()" color="success">PAY</ion-button>
+            <form class="mime" *ngIf="user" [formGroup]="paymentForm" (ngSubmit)="makepayment()" novalidate>
+                <ion-radio-group formControlName="choice" [(ngModel)]="numberchoice">
+                    <ion-list-header>
+                        <ion-label>Choose Payment Phone Number</ion-label>
+                    </ion-list-header>
+                    <ion-item (click)="makechanges();shownumber=false">
+                        <ion-label>My Phone Number</ion-label>
+                        <ion-radio slot="start" color="success" value="myphone"></ion-radio>
+                    </ion-item>
+                    <ion-item (click)="makechanges();shownumber=true">
+                        <ion-label>Other Phone Number</ion-label>
+                        <ion-radio slot="start" color="tertiary" value="othernumber"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
+                <ion-item *ngIf="shownumber==true" lines="full">
+                    <ion-label position="floating">eg. 2547XXXXXXXX</ion-label>
+                    <ion-input formControlName="othernumber" [(ngModel)]="othernum" type="text"></ion-input>
+                </ion-item>
+                <ion-button *ngIf="paying==false" type="submit" [disabled]="paymentForm.invalid" color="success">PAY</ion-button>
+                <div class="surrounder">
+                    <div class="inner" *ngIf="paying==true">
+                        <div class="sk-chase">
+                            <div class="sk-chase-dot"></div>
+                            <div class="sk-chase-dot"></div>
+                            <div class="sk-chase-dot"></div>
+                            <div class="sk-chase-dot"></div>
+                            <div class="sk-chase-dot"></div>
+                            <div class="sk-chase-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </ion-card>
     </div>
 </ion-content>

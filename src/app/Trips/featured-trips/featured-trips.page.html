@@ -31,26 +31,76 @@
                             <ion-icon class="woot" tappable name="caret-down-outline"></ion-icon>
                         </ion-chip>
                         {{trip.name}}
+                        <ion-item *ngIf="!trip.open" class="ion-no-padding ion-no-margin" style="font-size: 20px !important;" lines="none" expand="block">
+                            <ion-label>{{trip.overview}}</ion-label>
+                        </ion-item>
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content *ngIf="trip.open">
-                    {{trip.overview}}
+                    <strong>Overview:</strong><br> {{trip.overview}}
                     <br>
+                    <strong>Tips:</strong>
+                    <br>
+                    <div *ngFor="let desc of trip.descriptions; let i = index">
+                        <ion-row>
+                            <ion-text>{{i+1}}. {{desc}}</ion-text>
+                        </ion-row>
+                    </div>
                     <div *ngIf="remtime(trip.startdate) | async as time">
-                        <div *ngIf="time == 'EXPIRED'">
-                            <strong>Remaining Time:
-                                <ion-text color="danger">{{time}}</ion-text>
-                            </strong>
-                        </div>
-                        <div *ngIf="time != 'EXPIRED'">
-                            <strong>Remaining Time:
-                                <ion-text color="success">{{time}}</ion-text>
-                            </strong>
+                        <div *ngIf="remtime(trip.enddate) | async as time2">
+                            <ion-row>
+                                <ion-col size="4">
+                                    <strong>Starting Time:</strong>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <strong>
+                                        <ion-text>{{timez(trip.startdate) | async}}</ion-text>
+                                    </strong>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col size="4">
+                                    <strong>Ending Time:</strong>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <strong>
+                                        <ion-text>{{timez(trip.enddate) | async}}</ion-text>
+                                    </strong>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row *ngIf="time != 'EXPIRED' && time2 != 'EXPIRED'">
+                                <ion-col size="4">
+                                    <strong>Occurring in:</strong>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <strong><ion-text color="success">{{time}}</ion-text></strong>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row *ngIf="time == 'EXPIRED' && time2 == 'EXPIRED'">
+                                <ion-col size="4">
+                                    <strong>Status:</strong>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <strong>
+                                        <ion-text color="danger">{{time}}</ion-text>
+                                    </strong>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row *ngIf="time == 'EXPIRED' && time2 != 'EXPIRED'">
+                                <ion-col size="4">
+                                    <strong>Status:</strong>
+                                </ion-col>
+                                <ion-col size="8">
+                                    <strong>
+                                        <ion-text color="success">In Progress...</ion-text>
+                                    </strong>
+                                </ion-col>
+                            </ion-row>
+                            <ion-button *ngIf="time != 'EXPIRED'" (click)="presentPrompt(trip)" expand="block">Book
+                                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                            </ion-button>
                         </div>
                     </div>
-                    <ion-button (click)="presentPrompt(trip)" expand="block">Book
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                    </ion-button>
                 </ion-card-content>
             </ion-card>
         </ion-grid>
