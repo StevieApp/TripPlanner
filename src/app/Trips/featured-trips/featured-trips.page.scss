@@ -86,11 +86,16 @@ ion-toolbar {
     position: relative;
     margin: 0px;
     min-width: 100%;
+    max-width: 100%;
     padding: 0px;
 }
 
 #container a {
     text-decoration: none;
+}
+
+.adding {
+    font-size: 30px;
 }
 
 a {
