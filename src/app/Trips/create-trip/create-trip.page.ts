@@ -232,7 +232,9 @@ export class CreateTripPage implements OnInit {
 
   ngOnInit() {
     this.includevalidation();
-    this.getUser();
+    setTimeout(()=>{
+      this.getUser();
+    }, 5000)
   }
 
   async toaster(){
