@@ -51,8 +51,8 @@ export class CreateTripPage implements OnInit {
       this.afAuth.user.subscribe(
         currentuser=>{
           if (currentuser.uid){
-            var go = this.db.doc('users/'+currentuser.uid).valueChanges().subscribe(
-              elementor=>{
+            this.db.doc('users/'+currentuser.uid).valueChanges()
+              .subscribe(elementor=>{
                 if(elementor!=undefined){
                   this.user = elementor;
                   this.trip.planner = {
@@ -60,8 +60,7 @@ export class CreateTripPage implements OnInit {
                   username: this.user.username
                 }
               }
-              }
-            );
+            });
           }
         }
       );
