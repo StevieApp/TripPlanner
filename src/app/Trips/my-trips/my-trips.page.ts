@@ -46,7 +46,7 @@ export class MyTripsPage implements OnInit {
   uid;
   zero = false;
   i=0;
-
+  mod =[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
   isMine(element, index, array) { 
     return (element.planner.userid==window.localStorage.getItem('uid'));
   } 

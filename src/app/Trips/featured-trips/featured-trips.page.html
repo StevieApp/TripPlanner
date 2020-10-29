@@ -96,7 +96,20 @@
                                     </strong>
                                 </ion-col>
                             </ion-row>
-                            <ion-button *ngIf="time != 'EXPIRED'" (click)="presentPrompt(trip)" expand="block">Book
+                            <div *ngIf="trip.bookedusers">
+                                <ion-row class="miami" *ngFor="let user of trip.bookedusers">
+                                    <div *ngIf="uid == user.user">
+                                        <ion-chip>
+                                            <ion-avatar>
+                                                <img src="{{trip.imageURL}}">
+                                            </ion-avatar>
+                                            <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
+                                            <!-- <ion-icon name="close-circle"></ion-icon> -->
+                                        </ion-chip>
+                                    </div>
+                                </ion-row>
+                            </div>
+                            <ion-button *ngIf="time != 'EXPIRED' && !(trip.availableslots<=0)" (click)="presentPrompt(trip)" expand="block">Book
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
                         </div>

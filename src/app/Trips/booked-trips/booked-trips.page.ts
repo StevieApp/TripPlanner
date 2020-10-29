@@ -13,7 +13,9 @@ import { Platform } from '@ionic/angular';
 })
 export class BookedTripsPage implements OnInit {
 
-  constructor(private afs: AngularFirestore, 
+  constructor(
+    private afs: AngularFirestore,
+    private db:  AngularFirestore,
     public afAuth: AngularFireAuth, 
     public toastController: ToastController,
     public router: Router,
@@ -26,17 +28,21 @@ export class BookedTripsPage implements OnInit {
         }
     });
     setTimeout(()=>{
-      this.trips = afs.collection('trips').valueChanges();
+      this.trips = this.afs.collection('trips').valueChanges();
       this.trips.subscribe(tirip=>{
-        if(Array.isArray(tirip)){
-          var cor = tirip;
-          if(cor.length==0){
-            this.zero = true;
+          if(Array.isArray(tirip)){
+            var cor = tirip.filter(this.isMine);
+            if(cor.length==0){
+              this.zero = true;
+            }
           }
-        }
-      });
+        });
     }, 5000)
   }
+
+  isMine(element, index, array) { 
+    return (element.planner.userid!=window.localStorage.getItem('uid'));
+  } 
 
   zero = false;
   subscription;
@@ -113,6 +119,8 @@ export class BookedTripsPage implements OnInit {
     });
     return timer;
   }
+
+
 
   getRemainingTime(countDownDate){
     countDownDate = new Date(countDownDate).getTime();

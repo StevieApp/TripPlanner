@@ -96,25 +96,38 @@
                                     </strong>
                                 </ion-col>
                             </ion-row>
-                            <ion-button color="primary" expand="block">Edit Slots
-                                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                            </ion-button>
-                            <ion-button color="danger" expand="block">Cancel
-                                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                            </ion-button>
-                            <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book
-                                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                            </ion-button> -->
                         </div>
                     </div>
+                    <div *ngIf="trip.bookedusers">
+                        <ion-row *ngFor="let user of trip.bookedusers">
+                            <div class="miami" *ngIf="uid == user.user">
+                                <ion-chip>
+                                    <ion-avatar>
+                                        <img src="{{trip.imageURL}}">
+                                    </ion-avatar>
+                                    <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
+                                    <ion-icon name="close-circle"></ion-icon>
+                                </ion-chip>
+                            </div>
+                        </ion-row>
+                    </div>
+                    <!-- <ion-button color="primary" expand="block">Edit Slots
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-button> -->
+                    <ion-button color="danger" expand="block">Cancel
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-button>
+                    <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book
+                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                    </ion-button> -->
                 </ion-card-content>
             </ion-card>
         </ion-grid>
     </ion-content>
     <ion-content *ngIf="zero" fullscreen>
         <div id="container">
-            <strong>You do not have any trips. 
-                <a routerLink="/create-trip">Add<br>
+            <strong>You haven't booked any trips. 
+                <a routerLink="/featured-trips">Book<br>
                     <svg class="adding" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                         <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>

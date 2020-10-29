@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Platform, ToastController } from '@ionic/angular';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
   selector: 'app-selector',
@@ -15,8 +14,7 @@ export class SelectorPage implements OnInit {
     public afAuth: AngularFireAuth, 
     public router: Router,
     private toastController: ToastController,
-    private platform: Platform,
-    private statusBar: StatusBar
+    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -25,9 +23,9 @@ export class SelectorPage implements OnInit {
   subscription;
 
   ngAfterViewInit() {
-    console.log(this.platform.backButton.isStopped)
+    //console.log(this.platform.backButton.isStopped)
     this.subscription = this.platform.backButton.subscribe(() => {
-      console.log(this.platform.backButton.isStopped)
+      //console.log(this.platform.backButton.isStopped)
       if(this.router.url == '/selector'){
         navigator['app'].exitApp();
       }
@@ -45,8 +43,8 @@ export class SelectorPage implements OnInit {
 
   async successToast() {
     const toast = await this.toastController.create({
-      header: 'Successful Logout!',
-      message: 'Welcome',
+      header: 'Successful Logout',
+      message: 'Goodbye!',
       position: 'bottom',
       color: 'success'
     });

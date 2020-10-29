@@ -79,21 +79,22 @@ ion-toolbar {
     margin: 0;
 }
 
+.miami {
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box;
+    position: relative;
+    margin: 0px;
+    min-width: 100%;
+    padding: 0px;
+}
+
 #container a {
     text-decoration: none;
 }
 
 a {
     color: #28ba62;
-}
-
-.adding {
-    margin-top: 20px;
-    font-size: 30px;
-    padding-bottom: 0px;
-    margin: 0;
-    font-weight: 50;
-    line-height: 1.2rem;
 }
 
 .bigger {

@@ -171,6 +171,8 @@ export class CreateTripPage implements OnInit {
   }
 
   async saveToDatabase(loading){
+    this.trip.availableslots = this.trip.slots;
+    this.trip.bookedusers = [];
     const loader = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',

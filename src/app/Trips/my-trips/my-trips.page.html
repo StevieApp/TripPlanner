@@ -15,7 +15,7 @@
     </ion-content>
     <ion-content *ngIf="trips && !zero" fullscreen>
         <ion-grid *ngFor="let trip of trips | async; let i = index;">
-            <ion-card *ngIf="!(trip.planner.userid == uid)">
+            <ion-card *ngIf="(trip.planner.userid == uid)">
                 <ion-card-header class="bgimage" [ngStyle]="
                     {
                         'background-image': 'url('+trip.imageURL+')'
@@ -96,6 +96,30 @@
                                     </strong>
                                 </ion-col>
                             </ion-row>
+                            <table *ngIf="trip.bookedusers" class="ion-no-padding">
+                                <tr>
+                                    <p>
+                                        <ion-chip *ngFor="let user of trip.bookedusers">
+                                            <ion-avatar>
+                                                <img src="{{trip.imageURL}}">
+                                            </ion-avatar>
+                                            <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
+                                            <!-- <ion-icon name="close-circle"></ion-icon> -->
+                                        </ion-chip>
+                                    </p>
+                                </tr>
+                                <!-- <tr>
+                                    <p>
+                                        <ion-chip class="finer" tappable *ngFor="let user of mod; let i = index;">
+                                            <ion-avatar>
+                                                <img src="https://cdn.pixabay.com/photo/2013/07/12/15/36/fingerprint-150159_960_720.png">
+                                            </ion-avatar>
+                                            <ion-label>Lab | Slots: {{i}}</ion-label>
+                                            <ion-icon name="close-circle"></ion-icon>
+                                        </ion-chip>
+                                    </p>
+                                </tr> -->
+                            </table>
                             <ion-button color="primary" expand="block">Postpone
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>

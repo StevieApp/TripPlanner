@@ -15,7 +15,9 @@ import { map } from 'rxjs/operators';
 })
 export class FeaturedTripsPage implements OnInit {
 
-  constructor(private afs: AngularFirestore, 
+  constructor(
+    private afs: AngularFirestore,
+    private db: AngularFirestore,
     private afAuth: AngularFireAuth, 
     private toastController: ToastController,
     private router: Router,
@@ -26,12 +28,15 @@ export class FeaturedTripsPage implements OnInit {
       currentuser=>{
         if(currentuser){
           this.uid = currentuser.uid;
+         this.db.doc('users/'+currentuser.uid).valueChanges().subscribe(userr=>{
+          this.user = userr;
+         });
           window.localStorage.setItem('uid', this.uid);
         }
     });
     setTimeout(()=>{
       //this.trips = this.afs.collection('trips').valueChanges();
-      this.trips = afs.collection('trips').snapshotChanges().pipe(
+      this.trips = this.afs.collection('trips').snapshotChanges().pipe(
         map(actions => actions.map(a => {
           const data:any = a.payload.doc.data();
           const id = a.payload.doc.id;
@@ -52,6 +57,9 @@ export class FeaturedTripsPage implements OnInit {
       });
     }, 5000)
   }
+
+  
+  user;
 
   subscription;
   ngAfterViewInit() {
@@ -90,7 +98,8 @@ export class FeaturedTripsPage implements OnInit {
       header: 'Session Timeout!',
       message: 'Please login in again',
       position: 'bottom',
-      color: 'danger',});
+      color: 'danger',
+    });
     await toast.present();
     setTimeout(()=>{
       toast.dismiss();
@@ -162,12 +171,18 @@ export class FeaturedTripsPage implements OnInit {
     var message = {
       heading: 'Check your slots!',
       body: 'Invalid Slots. Check slot allocation'
-    } 
+    }
+    if(this.user == undefined){
+      this.afAuth.signOut();
+      this.signoutuser();
+    }
     let alert = this.alertController.create({
       backdropDismiss: false,
       subHeader: 'Per slot '+ ' : Ksh ' + trip.price + ' per slot',
       message: "Enter the number of slots:" + "<br>" +
-      "Slots remaining " + trip.slots + "<br>" + "Bookable slots " + (trip.slots*.1),
+      "All slots: " + trip.slots + "<br>" +
+      "Slots remaining: " + trip.availableslots + "<br>" + 
+      "Maximum Bookable slots: " + (trip.slots*.1),
       header: trip.name,
       cssClass: 'buttonCss',
       inputs: [
@@ -191,7 +206,7 @@ export class FeaturedTripsPage implements OnInit {
           role: 'cancel',
           cssClass: 'danger',
           handler: data => {
-            console.log('Cancel clicked');
+            //console.log('Cancel clicked');
           }
         },
         {
@@ -202,7 +217,9 @@ export class FeaturedTripsPage implements OnInit {
             if(parseInt(data.slots) == undefined ||
               isNaN(parseInt(data.slots)) ||
               parseInt(data.slots) > (trip.slots*.1) || 
-              parseInt(data.slots)<=0){
+              parseInt(data.slots)<=0 || 
+              parseInt(data.slots) > (trip.availableslots)
+            ){
               this.dangerToast(message);
               return false;
             } else{
@@ -214,8 +231,22 @@ export class FeaturedTripsPage implements OnInit {
     });
     (await alert).present();
   }
-
+  increment;
   async presentAlertConfirm(trip, slots) {
+    if(trip.bookedusers){
+      if(JSON.stringify(trip.bookedusers).includes(this.uid)){
+        trip.bookedusers.forEach((item)=>{
+          if(item.user == this.uid){
+            this.increment = item.slots;
+          }
+        });
+      } else{
+        this.increment = 0;
+      }
+    }else{
+      this.increment = 0;
+    }
+    //console.log(this.increment);
     var message = {
       heading: 'Booking ' + trip.name,
       body: 'Cancelled!'
@@ -223,7 +254,8 @@ export class FeaturedTripsPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Confirm!',
       message: 'Are you sure you want to book ' + slots 
-      +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each or a total of <br><strong>Ksh. '+ slots*trip.price + '</strong>',
+      +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each or a total of <br><strong>Ksh. '+ 
+      slots*trip.price + '</strong>',
       cssClass: 'buttonCss',
       buttons: [
         {
@@ -235,12 +267,16 @@ export class FeaturedTripsPage implements OnInit {
         }, {
           text: 'Okay',
           handler: () => {
-            console.log('Confirm Okay');
+            //console.log('Confirm Okay');
+            //console.log(this.user)
             this.router.navigate(['/mpesa'], { queryParams: { 
               price: slots*trip.price, 
               bookuid: window.sessionStorage.getItem('uid'), 
               slots: slots,
-              trip: trip.id
+              trip: trip.id,
+              user: this.uid,
+              username: this.user.username,
+              increment: this.increment
             }});
           }
         }

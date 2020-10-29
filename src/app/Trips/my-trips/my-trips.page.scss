@@ -52,6 +52,31 @@ ion-toolbar {
     text-align: center;
 }
 
+table {
+    margin: 0px;
+    max-width: 100%;
+    width: 100px;
+    padding: 0px;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    display: -webkit-box;
+}
+
+tr {
+    margin: 0px;
+    white-space: nowrap !important;
+    padding: 0px;
+}
+
+tr p {
+    margin: 0px;
+    overflow-x: scroll;
+    overflow-y: auto;
+    position: relative;
+    max-width: 78vw !important;
+    padding: 0px;
+}
+
 .bgimage {
     background-image: url('../../../assets/def.jpg');
     width: 100%;

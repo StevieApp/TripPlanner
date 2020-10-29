@@ -10,6 +10,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { collectExternalReferences } from '@angular/compiler';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-mpesa',
@@ -101,12 +102,14 @@ export class MPESAPage implements OnInit {
     },50)
   }
 
+  parameters;
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params.price) {
         this.price = params.price;
         btoa(this.price);
         console.log(params);
+        this.parameters = params;
       } else{
         this.router.navigate(['/featured-trips']);
       }
@@ -290,10 +293,14 @@ export class MPESAPage implements OnInit {
       from(nativeCall).pipe().subscribe(data=>{
         if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('successfully')){
           this.actualsuccessToast('Payment successful');
-          setTimeout(()=>{
-            this.paying = false;
-            this.router.navigate(['/booked-trips']);
-          }, 1000);
+          this.addToBooked(
+            this.parameters.trip, 
+            this.parameters.user, 
+            this.parameters.price, 
+            this.parameters.slots,
+            this.parameters.username,
+            this.parameters.increment,
+            );
         }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('cancelled') 
         || JSON.stringify(JSON.parse(data.data).ResultDesc).includes('timeout')){
           this.successToast('Payment did not go through');
@@ -314,6 +321,38 @@ export class MPESAPage implements OnInit {
         }
       });
     }, 2000);
+  }
+
+  addToBooked(tripid, userid, amount, slots, username, increment){
+    //console.log(username)
+    const updateRef = this.db.collection('trips').doc(tripid);
+    try {
+      updateRef.update({
+        bookedusers: firestore.FieldValue.arrayRemove({
+          user: userid,
+          slots: (parseInt(increment)),
+          paid: amount,
+          username: username
+        })
+      });
+      updateRef.update({
+        bookedusers: firestore.FieldValue.arrayUnion({
+          user: userid,
+          slots: (parseInt(slots)+parseInt(increment)),
+          paid: amount,
+          username: username
+        }),
+        availableslots: firestore.FieldValue.increment(-parseInt(slots))
+      });
+      setTimeout(()=>{
+        this.paying = false;
+        this.router.navigate(['/booked-trips']);
+      }, 1000);
+    } catch (error) {
+      this.successToast('Error saving details')
+      this.paying = false;
+      console.log(error);
+    }
   }
 
 }
