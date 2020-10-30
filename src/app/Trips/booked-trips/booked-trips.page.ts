@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { IonBackButtonDelegate, ToastController } from '@ionic/angular';
+import { AlertController, IonBackButtonDelegate, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Platform } from '@ionic/angular';
+import { map } from 'rxjs/operators';
+import { firestore } from 'firebase';
 
 @Component({
   selector: 'app-booked-trips',
@@ -19,16 +21,26 @@ export class BookedTripsPage implements OnInit {
     public afAuth: AngularFireAuth, 
     public toastController: ToastController,
     public router: Router,
-    private platform: Platform 
+    private platform: Platform,
+    private alertController: AlertController
   ){
     this.afAuth.user.subscribe(
       currentuser=>{
         if(currentuser){
           this.uid = currentuser.uid;
+          window.localStorage.setItem('uid', this.uid)
         }
     });
     setTimeout(()=>{
-      this.trips = this.afs.collection('trips').valueChanges();
+      //this.trips = this.afs.collection('trips').valueChanges();
+      this.trips = this.afs.collection('trips').snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          const data:any = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          data.id = id;
+          return data;
+        }))
+      );
       this.trips.subscribe(tirip=>{
           if(Array.isArray(tirip)){
             var cor = tirip.filter(this.isMine);
@@ -40,8 +52,87 @@ export class BookedTripsPage implements OnInit {
     }, 5000)
   }
 
-  isMine(element, index, array) { 
-    return (element.planner.userid!=window.localStorage.getItem('uid'));
+  doesinclude(array){
+    if(JSON.stringify(array).includes(window.localStorage.getItem('uid'))){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  delete(user, id){
+    this.presentAlertConfirm(user, id);
+  }
+
+  async presentAlertConfirm(user, id) {
+    const alert = await this.alertController.create({
+      cssClass: 'buttonCss',
+      header: 'Confirm',
+      message: 'Are you sure you want to <strong>cancel trip?</strong>',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'danger',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Okay',
+          cssClass: 'success',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.deletetrip(user, id);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  deletetrip(user, id){
+    console.log(user);
+    console.log(id);
+    var color = 'success';
+    var message = '';
+    const updateRef = this.db.collection('trips').doc(id);
+    try {
+      updateRef.update({
+        bookedusers: firestore.FieldValue.arrayRemove(user),
+        availableslots: firestore.FieldValue.increment(user.slots)
+      });
+      message = 'Trip Cancelled Successfully';
+      color = 'success';
+      this.toast(color, message);
+    } catch (error){
+      message = 'Error while cancelling trip';
+      color = 'danger';
+      this.toast(color, message);
+    }
+    //this.toast(color, message);
+  }
+
+  async toast(color, message){
+    const toast = await this.toastController.create({
+      header: message,
+      message: message,
+      position: 'bottom',
+      color: color
+    });
+    await toast.present();
+    setTimeout(()=>{
+      toast.dismiss();
+    }, 2000)
+  }
+
+
+  isMine(element, index, array) {
+    if(element.bookedusers){
+      return (JSON.stringify(element.bookedusers).toString().includes(window.localStorage.getItem('uid')));
+    } else {
+      return (false);
+    }
   } 
 
   zero = false;

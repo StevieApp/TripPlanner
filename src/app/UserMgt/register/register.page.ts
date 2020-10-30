@@ -38,12 +38,13 @@ export class RegisterPage implements OnInit {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Registering User...',
-      duration: 2000
+      mode: 'ios'
     });
     await loading.present();
 
     if(this.password !== this.cpassword){
-      const { role, data } = await loading.onDidDismiss();
+      //const { role, data } = await loading.onDidDismiss();
+      loading.dismiss();
       this.presentToastWithOptions("Passwords don't match");
       return console.error("Passwords don't match");
     } else {
@@ -51,12 +52,13 @@ export class RegisterPage implements OnInit {
         const res = await this.afAuth.createUserWithEmailAndPassword(this.user.email, this.password);
         await res.user.sendEmailVerification();
         await this.savetodb(loading, res.user.uid);
-        await loading.dismiss();
+        //loading.dismiss();
         //const { role, data } = await loading.onDidDismiss();
       } catch (error) {
         const { role, data } = await loading.onDidDismiss();
         console.dir(error);
         console.log(error);
+        loading.dismiss();
         if(error.code === "auth/argument-error" || error.code === "auth/invalid-email" || error.code === "auth/weak-password"){
           this.presentToastWithOptions(error.message);
           console.log(error);

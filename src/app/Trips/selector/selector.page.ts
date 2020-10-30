@@ -43,7 +43,7 @@ export class SelectorPage implements OnInit {
 
   async successToast() {
     const toast = await this.toastController.create({
-      header: 'Successful Logout',
+      header: 'Logged out',
       message: 'Goodbye!',
       position: 'bottom',
       color: 'success'

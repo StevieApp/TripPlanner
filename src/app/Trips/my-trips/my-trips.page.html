@@ -37,8 +37,8 @@
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content *ngIf="trip.open">
-                    <strong>Overview:</strong><br> {{trip.overview}}
-                    <br>
+                    <strong>Overview:</strong><br> {{trip.overview}}<br>
+                    <strong>Price per slot:</strong> {{trip.price}}/=<br>
                     <strong>Tips:</strong>
                     <br>
                     <div *ngFor="let desc of trip.descriptions; let i = index">
@@ -114,16 +114,42 @@
                                             <ion-avatar>
                                                 <img src="https://cdn.pixabay.com/photo/2013/07/12/15/36/fingerprint-150159_960_720.png">
                                             </ion-avatar>
-                                            <ion-label>Lab | Slots: {{i}}</ion-label>
+                                            <ion-label>Lab | Slots: {{i+1}}</ion-label>
                                             <ion-icon name="close-circle"></ion-icon>
                                         </ion-chip>
                                     </p>
                                 </tr> -->
                             </table>
-                            <ion-button color="primary" expand="block">Postpone
+                            <div *ngIf='trip.open2'>
+                                <form [formGroup]="updateTripForm" (ngSubmit)="updateTrip(trip)">
+                                    <ion-item lines="full">
+                                        <ion-label>Start Date</ion-label>
+                                        <ion-datetime formControlName="startdate" [(ngModel)]="trip.newstartdate" displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Start Time</ion-label>
+                                        <ion-datetime formControlName="starttime" [(ngModel)]="trip.newstartdate" display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>End Date</ion-label>
+                                        <ion-datetime formControlName="enddate" [(ngModel)]="trip.newenddate" displayFormat="MM/DD/YYYY" min="{{trip.newstartdate}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>End Time</ion-label>
+                                        <ion-datetime formControlName="endtime" [(ngModel)]="trip.newenddate" display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
+                                    </ion-item>
+                                    <ion-button type="submit" [disabled]="!updateTripForm.valid" color="secondary" expand="block">Postpone
+                                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                    </ion-button>
+                                </form>
+                                <ion-button type="submit" (click)="trip.open2=!trip.open2" color="warning" expand="block">Cancel
+                                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                </ion-button>
+                            </div>
+                            <ion-button *ngIf='!trip.open2' (click)='trip.open2=!trip.open2;trip.newstartdate = nextday;includevalidation();' color="primary" expand="block">Postpone
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
-                            <ion-button color="danger" expand="block">Delete
+                            <ion-button *ngIf='!trip.open2' (click)="delete(trip)" color="danger" expand="block">Delete
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
                             <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book

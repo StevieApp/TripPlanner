@@ -15,113 +15,114 @@
     </ion-content>
     <ion-content *ngIf="trips && !zero" fullscreen>
         <ion-grid *ngFor="let trip of trips | async; let i = index;">
-            <ion-card *ngIf="!(trip.planner.userid == uid)">
-                <ion-card-header class="bgimage" [ngStyle]="
-                    {
-                        'background-image': 'url('+trip.imageURL+')'
-                    }
-                "></ion-card-header>
-                <ion-card-header>
-                    <ion-card-subtitle>Destination</ion-card-subtitle>
-                    <ion-card-title class="bigger">
-                        <ion-chip class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open">
-                            <ion-icon class="woot" tappable name="caret-up-outline"></ion-icon>
-                        </ion-chip>
-                        <ion-chip class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open">
-                            <ion-icon class="woot" tappable name="caret-down-outline"></ion-icon>
-                        </ion-chip>
-                        {{trip.name}}
-                        <ion-item *ngIf="!trip.open" class="ion-no-padding ion-no-margin" style="font-size: 20px !important;" lines="none" expand="block">
-                            <ion-label>{{trip.overview}}</ion-label>
-                        </ion-item>
-                    </ion-card-title>
-                </ion-card-header>
-                <ion-card-content *ngIf="trip.open">
-                    <strong>Overview:</strong><br> {{trip.overview}}
-                    <br>
-                    <strong>Tips:</strong>
-                    <br>
-                    <div *ngFor="let desc of trip.descriptions; let i = index">
-                        <ion-row>
-                            <ion-text>{{i+1}}. {{desc}}</ion-text>
-                        </ion-row>
-                    </div>
-                    <div *ngIf="remtime(trip.startdate) | async as time">
-                        <div *ngIf="remtime(trip.enddate) | async as time2">
+            <div *ngIf="trip.bookedusers">
+                <ion-card *ngIf="!(trip.planner.userid == uid) && doesinclude(trip.bookedusers)">
+                    <ion-card-header class="bgimage" [ngStyle]="
+                        {
+                            'background-image': 'url('+trip.imageURL+')'
+                        }
+                    "></ion-card-header>
+                    <ion-card-header>
+                        <ion-card-subtitle>Destination</ion-card-subtitle>
+                        <ion-card-title class="bigger">
+                            <ion-chip class="boo" tappable *ngIf="trip.open" (click)="trip.open = !trip.open">
+                                <ion-icon class="woot" tappable name="caret-up-outline"></ion-icon>
+                            </ion-chip>
+                            <ion-chip class="boo" tappable *ngIf="!trip.open" (click)="trip.open = !trip.open">
+                                <ion-icon class="woot" tappable name="caret-down-outline"></ion-icon>
+                            </ion-chip>
+                            {{trip.name}}
+                            <ion-item *ngIf="!trip.open" class="ion-no-padding ion-no-margin" style="font-size: 20px !important;" lines="none" expand="block">
+                                <ion-label>{{trip.overview}}</ion-label>
+                            </ion-item>
+                        </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content *ngIf="trip.open">
+                        <strong>Overview:</strong><br> {{trip.overview}}<br>
+                        <strong>Price per slot:</strong> {{trip.price}}/=<br>
+                        <strong>Tips:</strong><br>
+                        <div *ngFor="let desc of trip.descriptions; let i = index">
                             <ion-row>
-                                <ion-col size="4">
-                                    <strong>Starting Time:</strong>
-                                </ion-col>
-                                <ion-col size="8">
-                                    <strong>
-                                        <ion-text>{{timez(trip.startdate) | async}}</ion-text>
-                                    </strong>
-                                </ion-col>
-                            </ion-row>
-                            <ion-row>
-                                <ion-col size="4">
-                                    <strong>Ending Time:</strong>
-                                </ion-col>
-                                <ion-col size="8">
-                                    <strong>
-                                        <ion-text>{{timez(trip.enddate) | async}}</ion-text>
-                                    </strong>
-                                </ion-col>
-                            </ion-row>
-                            <ion-row *ngIf="time != 'EXPIRED' && time2 != 'EXPIRED'">
-                                <ion-col size="4">
-                                    <strong>Occurring in:</strong>
-                                </ion-col>
-                                <ion-col size="8">
-                                    <strong><ion-text color="success">{{time}}</ion-text></strong>
-                                </ion-col>
-                            </ion-row>
-                            <ion-row *ngIf="time == 'EXPIRED' && time2 == 'EXPIRED'">
-                                <ion-col size="4">
-                                    <strong>Status:</strong>
-                                </ion-col>
-                                <ion-col size="8">
-                                    <strong>
-                                        <ion-text color="danger">{{time}}</ion-text>
-                                    </strong>
-                                </ion-col>
-                            </ion-row>
-                            <ion-row *ngIf="time == 'EXPIRED' && time2 != 'EXPIRED'">
-                                <ion-col size="4">
-                                    <strong>Status:</strong>
-                                </ion-col>
-                                <ion-col size="8">
-                                    <strong>
-                                        <ion-text color="success">In Progress...</ion-text>
-                                    </strong>
-                                </ion-col>
+                                <ion-text>{{i+1}}. {{desc}}</ion-text>
                             </ion-row>
                         </div>
-                    </div>
-                    <div *ngIf="trip.bookedusers">
-                        <ion-row *ngFor="let user of trip.bookedusers">
-                            <div class="miami" *ngIf="uid == user.user">
-                                <ion-chip>
-                                    <ion-avatar>
-                                        <img src="{{trip.imageURL}}">
-                                    </ion-avatar>
-                                    <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
-                                    <!-- <ion-icon name="close-circle"></ion-icon> -->
-                                </ion-chip>
+                        <div *ngIf="remtime(trip.startdate) | async as time">
+                            <div *ngIf="remtime(trip.enddate) | async as time2">
+                                <ion-row>
+                                    <ion-col size="4">
+                                        <strong>Starting Time:</strong>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <strong>
+                                            <ion-text>{{timez(trip.startdate) | async}}</ion-text>
+                                        </strong>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col size="4">
+                                        <strong>Ending Time:</strong>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <strong>
+                                            <ion-text>{{timez(trip.enddate) | async}}</ion-text>
+                                        </strong>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row *ngIf="time != 'EXPIRED' && time2 != 'EXPIRED'">
+                                    <ion-col size="4">
+                                        <strong>Occurring in:</strong>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <strong><ion-text color="success">{{time}}</ion-text></strong>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row *ngIf="time == 'EXPIRED' && time2 == 'EXPIRED'">
+                                    <ion-col size="4">
+                                        <strong>Status:</strong>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <strong>
+                                            <ion-text color="danger">{{time}}</ion-text>
+                                        </strong>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row *ngIf="time == 'EXPIRED' && time2 != 'EXPIRED'">
+                                    <ion-col size="4">
+                                        <strong>Status:</strong>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <strong>
+                                            <ion-text color="success">In Progress...</ion-text>
+                                        </strong>
+                                    </ion-col>
+                                </ion-row>
                             </div>
-                        </ion-row>
-                    </div>
-                    <!-- <ion-button color="primary" expand="block">Edit Slots
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                    </ion-button> -->
-                    <ion-button color="danger" expand="block">Cancel
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                    </ion-button>
-                    <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book
-                        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-                    </ion-button> -->
-                </ion-card-content>
-            </ion-card>
+                        </div>
+                        <div *ngIf="trip.bookedusers">
+                            <ion-row *ngFor="let user of trip.bookedusers">
+                                <div class="miami" *ngIf="uid == user.user">
+                                    <ion-chip>
+                                        <ion-avatar>
+                                            <img src="{{trip.imageURL}}">
+                                        </ion-avatar>
+                                        <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
+                                        <!-- <ion-icon name="close-circle"></ion-icon> -->
+                                    </ion-chip>
+                                </div>
+                                <ion-button class="width" (click)="delete(user, trip.id)" color="danger" expand="block">Cancel
+                                    <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                                </ion-button>
+                            </ion-row>
+                        </div>
+                        <!-- <ion-button color="primary" expand="block">Edit Slots
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-button> -->
+                        <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book
+                            <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+                        </ion-button> -->
+                    </ion-card-content>
+                </ion-card>
+            </div>
         </ion-grid>
     </ion-content>
     <ion-content *ngIf="zero" fullscreen>

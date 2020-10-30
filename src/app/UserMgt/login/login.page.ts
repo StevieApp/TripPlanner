@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Logging in...',
-      duration: 2000
+      mode: 'ios'
     });
     await loading.present();
     try {
@@ -40,22 +40,25 @@ export class LoginPage implements OnInit {
           this.router.navigate(["/selector"]);
         }, 500);
       }else{
-        const { role, data } = await loading.onDidDismiss();
         await res.user.sendEmailVerification();
         await this.notVerifiedToast();
         await this.afAuth.signOut();
+        loading.dismiss();
       }
       //
     } catch(err){
       const { role, data } = await loading.onDidDismiss();
       if(err.toString().includes('no user record')){
         this.presentToastWithOptions("User doesn't exist, Please register");
+        loading.dismiss();
       } else if(err.toString().includes('argument') 
       || err.toString().includes('password is invalid')
       || err.toString().includes('badly formatted')){
         this.presentToastWithOptions("Invalid Email or Password");
+        loading.dismiss();
       }else{
         this.presentToastWithOptions(err);
+        loading.dismiss();
       }
       console.dir(err)
     }

@@ -37,10 +37,9 @@
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content *ngIf="trip.open">
-                    <strong>Overview:</strong><br> {{trip.overview}}
-                    <br>
-                    <strong>Tips:</strong>
-                    <br>
+                    <strong>Overview:</strong><br> {{trip.overview}}<br>
+                    <strong>Price per slot:</strong> {{trip.price}}/=<br>
+                    <strong>Tips:</strong><br>
                     <div *ngFor="let desc of trip.descriptions; let i = index">
                         <ion-row>
                             <ion-text>{{i+1}}. {{desc}}</ion-text>

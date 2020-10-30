@@ -138,7 +138,7 @@ export class CreateTripPage implements OnInit {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      mode: 'ios'
     });
     try {
       loading.present();
@@ -160,7 +160,7 @@ export class CreateTripPage implements OnInit {
       })
       )
       .subscribe(lion=>{
-        loading.present();
+        //loading.present();
       }); 
     } catch (error) {
       this.createtoast(error);
@@ -172,12 +172,6 @@ export class CreateTripPage implements OnInit {
   async saveToDatabase(loading){
     this.trip.availableslots = this.trip.slots;
     this.trip.bookedusers = [];
-    const loader = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-      duration: 2000
-    });
-    await loader.present();
     try {
       await this.db.collection('trips').add(this.trip);
       await this.includevalidation();
@@ -195,7 +189,7 @@ export class CreateTripPage implements OnInit {
       this.trip.price = 0;
       this.trip.planner = JSON.parse('{}');
       this.getUser();
-      loader.dismiss();
+      loading.dismiss();
     } catch (error) {
        this.createtoast(error);
        loading.dismiss();
@@ -231,7 +225,9 @@ export class CreateTripPage implements OnInit {
   }
 
   ngOnInit() {
-    this.includevalidation();
+    setTimeout(()=>{
+      this.includevalidation();
+    }, 2000);
     setTimeout(()=>{
       this.getUser();
     }, 5000)
@@ -309,7 +305,7 @@ export class CreateTripPage implements OnInit {
         latitude: this.trip.latitude,
         animation: google.maps.Animation.DROP,
         longitude: this.trip.longitude,
-        description: 'Best Trip Ever'
+        description: this.trip.overview || 'Trip Overview'
       });
 
       mapMarker.setMap(this.map);
