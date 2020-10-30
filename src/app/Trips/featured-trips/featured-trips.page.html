@@ -37,6 +37,9 @@
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content *ngIf="trip.open">
+                    <ion-chip color="primary" class="goright" (click)="viewmap(trip)">
+                        <ion-icon color="secondary" name="location-outline" class="ion-no-margin"></ion-icon>
+                    </ion-chip>
                     <strong>Overview:</strong><br> {{trip.overview}}<br>
                     <strong>Price per slot:</strong> {{trip.price}}/=<br>
                     <strong>Tips:</strong><br>

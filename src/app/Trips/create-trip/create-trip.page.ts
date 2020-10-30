@@ -224,10 +224,8 @@ export class CreateTripPage implements OnInit {
     toast.present();
   }
 
-  ngOnInit() {
-    setTimeout(()=>{
-      this.includevalidation();
-    }, 2000);
+  ngOnInit() {  
+    this.includevalidation();
     setTimeout(()=>{
       this.getUser();
     }, 5000)
@@ -380,7 +378,7 @@ export class CreateTripPage implements OnInit {
             const options = {
               center: location,
               zoom: 15,
-              disableDefaultUI: true
+              disableDefaultUI: false
             }
             this.map = new google.maps.Map(this.mapRef.nativeElement, options);
             this.addmarkertomap();

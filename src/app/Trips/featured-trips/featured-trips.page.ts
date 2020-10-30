@@ -70,6 +70,15 @@ export class FeaturedTripsPage implements OnInit {
     });
   }
 
+  viewmap(trip){
+    this.router.navigate(['/trip-map-view'], { queryParams: { 
+      longitude: trip.longitude, 
+      latitude: trip.latitude,
+      name: trip.name,
+      overview: trip.overview
+    }});
+  }
+
   ionViewWillLeave(){ 
     this.subscription.unsubscribe(); 
   }

@@ -66,6 +66,10 @@ const routes: Routes = [
     canActivate: [AngularFireAuthGuard], 
     data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
+  {
+    path: 'trip-map-view',
+    loadChildren: () => import('./Trips/trip-map-view/trip-map-view.module').then( m => m.TripMapViewPageModule)
+  },
 ];
 
 @NgModule({

@@ -78,6 +78,15 @@ export class MyTripsPage implements OnInit {
     return true;
   }
 
+  viewmap(trip){
+    this.router.navigate(['/trip-map-view'], { queryParams: { 
+      longitude: trip.longitude, 
+      latitude: trip.latitude,
+      name: trip.name,
+      overview: trip.overview
+    }});
+  }
+
   async updateTrip(trip){
     if(!this.comparedates(trip.newstartdate, trip.newenddate)){
       const toast = await this.toastController.create({

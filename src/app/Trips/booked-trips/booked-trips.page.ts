@@ -52,6 +52,15 @@ export class BookedTripsPage implements OnInit {
     }, 5000)
   }
 
+  viewmap(trip){
+    this.router.navigate(['/trip-map-view'], { queryParams: { 
+      longitude: trip.longitude, 
+      latitude: trip.latitude,
+      name: trip.name,
+      overview: trip.overview
+    }});
+  }
+
   doesinclude(array){
     if(JSON.stringify(array).includes(window.localStorage.getItem('uid'))){
       return true;
