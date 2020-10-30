@@ -79,6 +79,26 @@ export class FeaturedTripsPage implements OnInit {
     }});
   }
 
+  ismaxed(trip){
+    var mingo = false;
+    if(trip.bookedusers){
+      if(JSON.stringify(trip.bookedusers).includes(this.uid)){
+        trip.bookedusers.forEach(element => {
+          //console.log(element.user);
+          if(element.user == this.uid && element.slots>=Math.round(trip.slots*.1)){
+            mingo = true;
+          }
+        });
+        // console.log(mingo);
+        return mingo;
+      } else{
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   ionViewWillLeave(){ 
     this.subscription.unsubscribe(); 
   }
@@ -191,7 +211,7 @@ export class FeaturedTripsPage implements OnInit {
       message: "Enter the number of slots:" + "<br>" +
       "All slots: " + trip.slots + "<br>" +
       "Slots remaining: " + trip.availableslots + "<br>" + 
-      "Maximum Bookable slots: " + (trip.slots*.1),
+      "Maximum Bookable slots: " + Math.round(trip.slots*.1),
       header: trip.name,
       cssClass: 'buttonCss',
       inputs: [
@@ -200,11 +220,11 @@ export class FeaturedTripsPage implements OnInit {
           placeholder: 'Slots',
           type: 'number',
           value: this.tripvalues,
-          max: Math.trunc((trip.slots*.1)),
+          max: Math.round((trip.slots*.1)),
           min: 1,
           cssClass: 'specialClass',
           attributes: {
-            max: Math.trunc((trip.slots*.1)),
+            max: Math.round((trip.slots*.1)),
             inputmode: 'decimal'
           }
         }

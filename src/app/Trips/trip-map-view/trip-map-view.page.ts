@@ -24,7 +24,7 @@ export class TripMapViewPage implements OnInit {
       latitude: this.trip.latitude,
       animation: google.maps.Animation.DROP,
       longitude: this.trip.longitude,
-      description: this.trip.overview || 'Trip Overview'
+      description: this.trip.overview || 'Trip Overview',
     });
 
     mapMarker.setMap(this.map);
@@ -33,15 +33,15 @@ export class TripMapViewPage implements OnInit {
 
   infoWindow;
   addInfoWindowToMarker(marker){
-      let infoWindowContent = '<div id="mild" style="opacity:.8;">' +
-                                '<h2 style="color:black;" id="firstHeading" class="firstHeading">' +
-                                marker.title + '</h2>' +
-                                '<p style="color:black;"><b>Coordinates:</b></p>' +
-                                '<p style="color:black;"> Longitude: ' + marker.longitude + '</p>' +
-                                '<p style="color:black;"> Latitude: ' + marker.latitude + '</p>' +
-                                '<p style="color:black;"> Description: ' + marker.description + '</p>' +
-                                '<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
-                              '</div>';
+      let infoWindowContent = '<ion-grid id="mild" style="opacity:.8;">' +
+                              '<h2 style="color:black;" id="firstHeading" class="firstHeading">' +
+                              marker.title + '</h2>' +
+                              '<p><ion-text style="color:black;"><strong>Coordinates:</strong></ion-text></p>' +
+                              '<p><ion-text style="color:black;"> Longitude: ' + marker.longitude + '</ion-text></p>' +
+                              '<p><ion-text style="color:black;"> Latitude: ' + marker.latitude + '</ion-text></p>' +
+                              '<p><ion-text style="color:black;"> Description: ' + marker.description + '</ion-text></p>' +
+                              //'<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
+                              '</ion-grid>';
       let infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent
       });
