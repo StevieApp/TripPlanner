@@ -247,7 +247,7 @@ export class MPESAPage implements OnInit {
       "TransactionType":"CustomerPayBillOnline",
       "Amount":"1",
       "PartyA":paymentnum,
-      "PartyB":"174379",
+      "PartyB":shortcode,
       "PhoneNumber":paymentnum,
       "CallBackURL":"https://reaphoster.web.app",
       "AccountReference":"TripPlanner",
