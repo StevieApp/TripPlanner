@@ -46,6 +46,7 @@ export class TripMapViewPage implements OnInit {
         content: infoWindowContent
       });
       this.infoWindow = infoWindow;
+      infoWindow.open(this.map, marker);
       marker.addListener('click', ()=>{
         this.closeInfoWindow();
         infoWindow.open(this.map, marker);

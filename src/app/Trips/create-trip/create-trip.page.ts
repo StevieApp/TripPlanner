@@ -333,6 +333,7 @@ export class CreateTripPage implements OnInit {
         content: infoWindowContent
       });
       this.infoWindow = infoWindow;
+      infoWindow.open(this.map, marker);
       marker.addListener('click', ()=>{
         this.closeInfoWindow();
         infoWindow.open(this.map, marker);
@@ -357,6 +358,7 @@ export class CreateTripPage implements OnInit {
                                 '<ion-button mode="ios" id="accept" color="secondary" expand="block">Accept</ion-button>'+
                               '</div>';
         this.infoWindow.setContent(infoWindowContent);
+        infoWindow.open(this.map, marker);
       });
       // google.maps.event.addListener(marker, 'dragend', ()=>
       //        {
