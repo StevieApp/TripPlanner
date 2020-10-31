@@ -28,7 +28,7 @@
                     <ion-label position="floating">eg. 2547XXXXXXXX</ion-label>
                     <ion-input formControlName="othernumber" [(ngModel)]="othernum" type="text"></ion-input>
                 </ion-item>
-                <ion-button *ngIf="paying==false" type="submit" [disabled]="paymentForm.invalid" color="success">PAY</ion-button>
+                <ion-button mode="ios" *ngIf="paying==false" type="submit" [disabled]="paymentForm.invalid" color="success">PAY</ion-button>
                 <div class="surrounder">
                     <div class="inner" *ngIf="paying==true">
                         <div class="sk-chase">

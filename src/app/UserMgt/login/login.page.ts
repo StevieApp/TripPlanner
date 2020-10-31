@@ -72,7 +72,8 @@ export class LoginPage implements OnInit {
       header: 'Could Not Login',
       message: message,
       position: 'bottom',
-      color: 'danger'
+      color: 'danger',
+      mode: 'ios'
     });
     toast.present();
     setTimeout(()=>{
@@ -85,7 +86,8 @@ export class LoginPage implements OnInit {
       header: 'Successful Login',
       message: 'Welcome!',
       position: 'bottom',
-      color: 'success'
+      color: 'success',
+      mode: 'ios'
     });
     toast.present();
     setTimeout(()=>{

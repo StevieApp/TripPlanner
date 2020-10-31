@@ -141,18 +141,18 @@
                                         <ion-label>End Time</ion-label>
                                         <ion-datetime formControlName="endtime" [(ngModel)]="trip.newenddate" display-format="h:mm A" picker-format="h:mm A" value="{{myDate}}"></ion-datetime>
                                     </ion-item>
-                                    <ion-button type="submit" [disabled]="!updateTripForm.valid" color="secondary" expand="block">Postpone
+                                    <ion-button mode="ios" type="submit" [disabled]="!updateTripForm.valid" color="secondary" expand="block">Postpone
                                         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                     </ion-button>
                                 </form>
-                                <ion-button type="submit" (click)="trip.open2=!trip.open2" color="warning" expand="block">Cancel
+                                <ion-button mode="ios" type="submit" (click)="trip.open2=!trip.open2" color="warning" expand="block">Cancel
                                     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                 </ion-button>
                             </div>
-                            <ion-button *ngIf='!trip.open2' (click)='trip.open2=!trip.open2;trip.newstartdate = nextday;includevalidation();' color="primary" expand="block">Postpone
+                            <ion-button mode="ios" *ngIf='!trip.open2' (click)='trip.open2=!trip.open2;trip.newstartdate = nextday;includevalidation();' color="primary" expand="block">Postpone
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
-                            <ion-button *ngIf='!trip.open2' (click)="delete(trip)" color="danger" expand="block">Delete
+                            <ion-button mode="ios" *ngIf='!trip.open2' (click)="delete(trip)" color="danger" expand="block">Delete
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
                             <!-- <ion-button *ngIf="time != 'EXPIRED'" expand="block">Book

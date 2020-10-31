@@ -93,7 +93,9 @@ export class MyTripsPage implements OnInit {
         header: 'Please check your dates!',
         message: 'Start date should be before end date',
         position: 'bottom',
-        color: 'danger',});
+        color: 'danger',
+        mode: 'ios'
+      });
       await toast.present();
       setTimeout(()=>{
         toast.dismiss();
@@ -164,7 +166,9 @@ export class MyTripsPage implements OnInit {
       header: 'Session Timeout!',
       message: 'Please login in again',
       position: 'bottom',
-      color: 'danger',});
+      color: 'danger',
+      mode: 'ios'
+    });
     await toast.present();
     setTimeout(()=>{
       toast.dismiss();
@@ -248,7 +252,9 @@ export class MyTripsPage implements OnInit {
       header: heading,
       message: message +'!',
       position: 'bottom',
-      color: color,});
+      color: color,
+      mode: 'ios'
+    });
     await toast.present();
     setTimeout(()=>{
       toast.dismiss();

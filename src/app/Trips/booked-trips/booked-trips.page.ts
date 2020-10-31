@@ -134,7 +134,8 @@ export class BookedTripsPage implements OnInit {
       header: heading,
       message: message+'!',
       position: 'bottom',
-      color: color
+      color: color,
+      mode: 'ios'
     });
     await toast.present();
     setTimeout(()=>{
@@ -201,7 +202,9 @@ export class BookedTripsPage implements OnInit {
       header: 'Session Timeout!',
       message: 'Please login in again',
       position: 'bottom',
-      color: 'danger',});
+      color: 'danger',
+      mode: 'ios'
+    });
     await toast.present();
     setTimeout(()=>{
       toast.dismiss();

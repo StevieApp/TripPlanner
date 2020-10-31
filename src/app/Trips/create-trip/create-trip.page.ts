@@ -112,7 +112,9 @@ export class CreateTripPage implements OnInit {
         header: 'Please check your dates!',
         message: 'Start date should be before end date',
         position: 'bottom',
-        color: 'danger',});
+        color: 'danger',
+        mode: 'ios'
+      });
       await toast.present();
       setTimeout(()=>{
         toast.dismiss();
@@ -125,7 +127,9 @@ export class CreateTripPage implements OnInit {
         header: 'Session Timeout!',
         message: 'Please login in again',
         position: 'bottom',
-        color: 'danger',});
+        color: 'danger',
+        mode: 'ios'
+      });
       await toast.present();
       setTimeout(()=>{
         toast.dismiss();
@@ -202,6 +206,7 @@ export class CreateTripPage implements OnInit {
       message: "Tap 'View' to display your trips",
       position: 'bottom',
       color: 'success',
+      mode: 'ios',
       buttons: [
         {
           side: 'end',
@@ -237,7 +242,9 @@ export class CreateTripPage implements OnInit {
       header: this.trip.planner.userid,
       message: this.trip.planner.username,
       position: 'bottom',
-      color: 'success',});
+      color: 'success',
+      mode: 'ios'
+    });
     toast.present();
     setTimeout(()=>{
       toast.dismiss();
@@ -279,6 +286,7 @@ export class CreateTripPage implements OnInit {
         message: message.message,
         position: 'bottom',
         color: 'danger',
+        mode: 'ios',
         buttons: [
           {
             side: 'end',
@@ -399,6 +407,7 @@ export class CreateTripPage implements OnInit {
         message: 'Tap Back to Close',
         position: 'bottom',
         color: 'danger',
+        mode: 'ios',
         buttons: [
           {
             side: 'end',

@@ -21,7 +21,7 @@
                         <ion-input formControlName="password" [(ngModel)]="password" type="password"></ion-input>
                     </ion-item>
                 </ion-list>
-                <ion-button [disabled]="!loginForm.valid" id="look" type="submit" color="primary" expand="block">
+                <ion-button mode="ios" [disabled]="!loginForm.valid" id="look" type="submit" color="primary" expand="block">
                     Sign In
                     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                 </ion-button>

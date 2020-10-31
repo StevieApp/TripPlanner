@@ -86,6 +86,7 @@ export class TripMapViewPage implements OnInit {
       message: 'Tap Back to Close',
       position: 'bottom',
       color: 'danger',
+      mode: 'ios',
       buttons: [
         {
           side: 'end',

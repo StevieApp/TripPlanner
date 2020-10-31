@@ -130,6 +130,7 @@ export class MPESAPage implements OnInit {
       message: body,
       position: 'bottom',
       color: 'danger',
+      mode: 'ios',
       buttons: [
         {
           side: 'end',
@@ -155,6 +156,7 @@ export class MPESAPage implements OnInit {
       message: body,
       position: 'bottom',
       color: 'success',
+      mode: 'ios',
       buttons: [
         {
           side: 'end',

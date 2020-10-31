@@ -46,7 +46,8 @@ export class SelectorPage implements OnInit {
       header: 'Logged out',
       message: 'Goodbye!',
       position: 'bottom',
-      color: 'success'
+      color: 'success',
+      mode: 'ios'
     });
     toast.present();
     setTimeout(()=>{

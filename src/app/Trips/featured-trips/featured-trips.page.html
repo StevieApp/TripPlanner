@@ -118,7 +118,7 @@
                                     </strong>
                                 </ion-text>
                             </div>
-                            <ion-button *ngIf="time != 'EXPIRED' && !(trip.availableslots<=0) && !ismaxed(trip)" (click)="presentPrompt(trip)" expand="block">Book
+                            <ion-button mode="ios" *ngIf="time != 'EXPIRED' && !(trip.availableslots<=0) && !ismaxed(trip)" (click)="presentPrompt(trip)" expand="block">Book
                                 <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                             </ion-button>
                         </div>

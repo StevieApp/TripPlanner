@@ -128,6 +128,7 @@ export class FeaturedTripsPage implements OnInit {
       message: 'Please login in again',
       position: 'bottom',
       color: 'danger',
+      mode: 'ios'
     });
     await toast.present();
     setTimeout(()=>{
@@ -336,6 +337,7 @@ export class FeaturedTripsPage implements OnInit {
         message: message.body,
         position: 'bottom',
         color: 'danger',
+        mode: 'ios',
         buttons: [
           {
             side: 'end',

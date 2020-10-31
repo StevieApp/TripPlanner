@@ -89,7 +89,8 @@ export class RegisterPage implements OnInit {
       header: 'Successful Registration!',
       message: 'View Email for verification link',
       position: 'bottom',
-      color: 'success'
+      color: 'success',
+      mode: 'ios'
     });
     toast.present();
     setTimeout(()=>{
@@ -102,7 +103,8 @@ export class RegisterPage implements OnInit {
       header: 'Could Not Register!',
       message: message,
       position: 'bottom',
-      color: 'danger'
+      color: 'danger',
+      mode: 'ios'
     });
     toast.present();
     setTimeout(()=>{
