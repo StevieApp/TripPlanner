@@ -327,7 +327,7 @@ export class CreateTripPage implements OnInit {
                               '<p><ion-text style="color:black;"> Longitude: ' + marker.longitude + '</ion-text></p>' +
                               '<p><ion-text style="color:black;"> Latitude: ' + marker.latitude + '</ion-text></p>' +
                               '<p><ion-text style="color:black;"> Description: ' + marker.description + '</ion-text></p>' +
-                              '<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
+                              '<ion-button mode="ios" id="accept" color="secondary" expand="block">Accept</ion-button>'+
                               '</ion-grid>';
       let infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent
@@ -354,7 +354,7 @@ export class CreateTripPage implements OnInit {
                                 '<p style="color:black;"> Longitude: ' + marker.longitude + '</p>' +
                                 '<p style="color:black;"> Latitude: ' + marker.latitude + '</p>' +
                                 '<p style="color:black;"> Description: ' + marker.description + '</p>' +
-                                '<ion-button id="accept" color="secondary" expand="block">Accept</ion-button>'+
+                                '<ion-button mode="ios" id="accept" color="secondary" expand="block">Accept</ion-button>'+
                               '</div>';
         this.infoWindow.setContent(infoWindowContent);
       });
