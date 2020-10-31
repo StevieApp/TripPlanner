@@ -76,7 +76,7 @@ export class BookedTripsPage implements OnInit {
   async presentAlertConfirm(user, id) {
     const alert = await this.alertController.create({
       cssClass: 'buttonCss',
-      header: 'Confirm',
+      header: 'Confirm!',
       message: 'Are you sure you want to <strong>cancel trip?</strong>',
       mode: 'ios',
       buttons: [
