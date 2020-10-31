@@ -236,8 +236,14 @@ export class MyTripsPage implements OnInit {
   }
 
   async toast(message, color){
+    var heading = "";
+    if(color == 'success'){
+      heading = "Success";
+    } else if (color == 'danger'){
+      heading = "Failed";
+    }
     const toast = await this.toastController.create({
-      header: message,
+      header: heading,
       message: message,
       position: 'bottom',
       color: color,});

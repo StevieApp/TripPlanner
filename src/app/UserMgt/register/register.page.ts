@@ -56,15 +56,17 @@ export class RegisterPage implements OnInit {
         //const { role, data } = await loading.onDidDismiss();
       } catch (error) {
         //const { role, data } = await loading.onDidDismiss();
-        console.dir(error);
-        console.log(error);
+        //console.dir(error);
+        //console.log(error);
         loading.dismiss();
         if(error.code === "auth/argument-error" || error.code === "auth/invalid-email" || error.code === "auth/weak-password"){
           this.presentToastWithOptions(error.message);
-          console.log(error);
+          //console.log(error);
+        }else if (error.message.toString().includes('A network error')){
+          this.presentToastWithOptions('Check your network connection');
         } else{
           this.presentToastWithOptions(error);
-          console.log(error);
+          //console.log(error);
         }
       }
     }
