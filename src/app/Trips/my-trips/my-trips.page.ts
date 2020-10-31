@@ -184,6 +184,7 @@ export class MyTripsPage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'buttonCss',
       header: 'Confirm',
+      mode: 'ios',
       message: 'Are you sure you want to <strong>cancel trip?</strong>',
       buttons: [
         {

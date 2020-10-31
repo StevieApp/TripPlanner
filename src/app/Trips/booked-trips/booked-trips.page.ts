@@ -78,6 +78,7 @@ export class BookedTripsPage implements OnInit {
       cssClass: 'buttonCss',
       header: 'Confirm',
       message: 'Are you sure you want to <strong>cancel trip?</strong>',
+      mode: 'ios',
       buttons: [
         {
           text: 'Cancel',

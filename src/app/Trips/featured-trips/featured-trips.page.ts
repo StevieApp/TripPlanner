@@ -214,6 +214,7 @@ export class FeaturedTripsPage implements OnInit {
       "Maximum Bookable slots: " + Math.round(trip.slots*.1),
       header: trip.name,
       cssClass: 'buttonCss',
+      mode: 'ios',
       inputs: [
         {
           name: 'slots',
@@ -286,6 +287,7 @@ export class FeaturedTripsPage implements OnInit {
       +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each or a total of <br><strong>Ksh. '+ 
       slots*trip.price + '</strong>',
       cssClass: 'buttonCss',
+      mode: 'ios',
       buttons: [
         {
           text: 'Cancel',
