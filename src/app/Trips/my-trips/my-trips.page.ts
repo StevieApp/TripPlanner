@@ -250,7 +250,7 @@ export class MyTripsPage implements OnInit {
     await toast.present();
     setTimeout(()=>{
       toast.dismiss();
-    }, 5000);
+    }, 2000);
   }
   remtime(countDownDate): Observable<any>{
     var timer = new Observable(observer => {
