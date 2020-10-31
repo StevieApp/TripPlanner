@@ -55,7 +55,7 @@ export class RegisterPage implements OnInit {
         //loading.dismiss();
         //const { role, data } = await loading.onDidDismiss();
       } catch (error) {
-        const { role, data } = await loading.onDidDismiss();
+        //const { role, data } = await loading.onDidDismiss();
         console.dir(error);
         console.log(error);
         loading.dismiss();

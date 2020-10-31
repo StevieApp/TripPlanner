@@ -47,20 +47,23 @@ export class LoginPage implements OnInit {
       }
       //
     } catch(err){
-      const { role, data } = await loading.onDidDismiss();
+      console.dir(err);
+      //const { role, data } = await loading.onDidDismiss();
       if(err.toString().includes('no user record')){
-        this.presentToastWithOptions("User doesn't exist, Please register");
         loading.dismiss();
+        this.presentToastWithOptions("User doesn't exist, Please register");
       } else if(err.toString().includes('argument') 
       || err.toString().includes('password is invalid')
       || err.toString().includes('badly formatted')){
+        loading.dismiss();
         this.presentToastWithOptions("Invalid Email or Password");
+      }else if (err.message.toString().includes('A network error')){
         loading.dismiss();
-      }else{
-        this.presentToastWithOptions(err);
+        this.presentToastWithOptions('Check your network connection');
+      } else{
         loading.dismiss();
+        this.presentToastWithOptions(err.message);
       }
-      console.dir(err)
     }
   }
 
