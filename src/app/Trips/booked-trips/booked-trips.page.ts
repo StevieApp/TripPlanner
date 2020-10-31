@@ -131,7 +131,7 @@ export class BookedTripsPage implements OnInit {
     }
     const toast = await this.toastController.create({
       header: heading,
-      message: message,
+      message: message+'!',
       position: 'bottom',
       color: color
     });

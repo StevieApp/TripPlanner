@@ -228,7 +228,8 @@ export class CreateTripPage implements OnInit {
     this.includevalidation();
     setTimeout(()=>{
       this.getUser();
-    }, 5000)
+    }, 5000);
+    //window.setInterval(()=>{window.location.href=window.location.href},15000);
   }
 
   async toaster(){

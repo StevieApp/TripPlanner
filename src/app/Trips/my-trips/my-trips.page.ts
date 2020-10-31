@@ -156,6 +156,7 @@ export class MyTripsPage implements OnInit {
         this.signoutuser();
       }
     }, 1000);
+    //window.setTimeout(()=>{window.location.href=window.location.href},15000);
   }
 
   async signoutuser(){
@@ -244,7 +245,7 @@ export class MyTripsPage implements OnInit {
     }
     const toast = await this.toastController.create({
       header: heading,
-      message: message,
+      message: message +'!',
       position: 'bottom',
       color: color,});
     await toast.present();
