@@ -222,11 +222,11 @@ export class FeaturedTripsPage implements OnInit {
           placeholder: 'Slots',
           type: 'number',
           value: this.tripvalues,
-          max: Math.round((trip.slots*.1)),
+          max: Math.ceil((trip.slots*.1)),
           min: 1,
           cssClass: 'specialClass',
           attributes: {
-            max: Math.round((trip.slots*.1)),
+            max: Math.ceil((trip.slots*.1)),
             inputmode: 'decimal'
           }
         }
@@ -247,7 +247,7 @@ export class FeaturedTripsPage implements OnInit {
             //console.log(type of data.slots == 40)
             if(parseInt(data.slots) == undefined ||
               isNaN(parseInt(data.slots)) ||
-              parseInt(data.slots) > (trip.slots*.1) || 
+              parseInt(data.slots) > Math.ceil(trip.slots*.1) || 
               parseInt(data.slots)<=0 || 
               parseInt(data.slots) > (trip.availableslots)
             ){

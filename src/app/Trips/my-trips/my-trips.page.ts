@@ -224,7 +224,7 @@ export class MyTripsPage implements OnInit {
 
   async deletemytrip(trip){
     const loading = await this.loadingController.create({
-      message: 'Postponing trip...',
+      message: 'Deleting trip...',
       mode: 'ios'
     });
     await loading.present();

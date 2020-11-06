@@ -461,7 +461,7 @@ export class CreateTripPage implements OnInit {
         overview: new FormControl('',[
           Validators.required,
           Validators.minLength(20),
-          Validators.maxLength(50)
+          Validators.maxLength(250)
         ]),
         startdate: new FormControl('',[
           Validators.required

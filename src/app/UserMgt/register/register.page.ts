@@ -72,13 +72,17 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  async savetodb(controller, id){
+  savetodb(controller, id){
     try {
       //await this.db.collection('users').add(this.user);
-      await this.db.collection("users").doc(id).set(this.user);
-      this.successToast();
-      controller.dismiss();
-      this.router.navigate(["/login"]);
+      console.log(id);
+      this.db.collection("users").doc(id).set(this.user);
+      setTimeout(()=>{
+        this.successToast();
+        controller.dismiss();
+        this.afAuth.signOut();
+        this.router.navigate(["/login"]);
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -86,16 +90,26 @@ export class RegisterPage implements OnInit {
 
   async successToast() {
     const toast = await this.toastController.create({
-      header: 'Successful Registration!',
-      message: 'View Email for verification link',
+      header: 'Successful Registration',
+      message: 'View Email for verification link!',
       position: 'bottom',
       color: 'success',
-      mode: 'ios'
+      mode: 'ios',
+      buttons: [
+        {
+          side: 'end',
+          text: 'Ok',
+          role: 'cancel',
+          handler: () => {
+            toast.dismiss();
+          }
+        }
+      ]
     });
     toast.present();
-    setTimeout(()=>{
-      toast.dismiss();
-    }, 2000);
+    // setTimeout(()=>{
+    //   toast.dismiss();
+    // }, 2000);
   }
 
   async presentToastWithOptions(message) {
@@ -124,21 +138,21 @@ export class RegisterPage implements OnInit {
         Validators.maxLength(50),
         Validators.pattern(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
       ]),
+      companyname: new FormControl('',[
+        Validators.minLength(2),
+        Validators.maxLength(20)
+      ]),
       firstname: new FormControl('',[
-        Validators.required,
         Validators.minLength(2),
         Validators.maxLength(20)
       ]),
       lastname: new FormControl('',[
-        Validators.required,
         Validators.minLength(2),
         Validators.maxLength(20)
       ]),
       dob: new FormControl('',[
-        Validators.required
       ]),
       gender: new FormControl('',[
-        Validators.required
       ]),
       country: new FormControl('',[
         Validators.required
@@ -153,6 +167,11 @@ export class RegisterPage implements OnInit {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(20)
+      ]),
+      role: new FormControl('',[
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(30)
       ]),
       password: new FormControl('',[
         Validators.required,

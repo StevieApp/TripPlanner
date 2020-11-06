@@ -112,7 +112,7 @@
                                         <!-- <ion-icon name="close-circle"></ion-icon> -->
                                     </ion-chip>
                                 </div>
-                                <ion-button mode="ios" class="width" (click)="delete(user, trip.id)" color="danger" expand="block">Cancel
+                                <ion-button *ngIf="uid == user.user" mode="ios" class="width" (click)="delete(user, trip.id)" color="danger" expand="block">Cancel
                                     <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                 </ion-button>
                             </ion-row>

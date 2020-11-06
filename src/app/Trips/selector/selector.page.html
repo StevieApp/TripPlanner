@@ -13,13 +13,17 @@
         </ion-toolbar>
     </ion-header>
 
-    <div id="container">
-        <strong>Customize own Trip? Select</strong><br><br>
-        <ion-chip routerLink="/create-trip" color="secondary">Create Own Trips</ion-chip><br><br>
-        <ion-chip routerLink="/my-trips" color="secondary">View My Trips</ion-chip><br><br>
-        <strong>View Trips? Select</strong><br><br>
-        <ion-chip routerLink="/featured-trips" color="primary">Featured Trips</ion-chip>
-        <ion-chip routerLink="/booked-trips" color="primary">Booked Trips</ion-chip>
+    <div id="container" *ngIf="mydetails">
+        <div *ngIf="mydetails.role == 'admin' || mydetails.role == 'Holding Company'">
+            <strong>Customize own Trip? Select</strong><br><br>
+            <ion-chip routerLink="/create-trip" color="secondary">Create Own Trips</ion-chip><br><br>
+            <ion-chip routerLink="/my-trips" color="secondary">View My Trips</ion-chip><br><br>
+        </div>
+        <div *ngIf="mydetails.role == 'admin' || mydetails.role == 'Customer'">
+            <strong>View Trips? Select</strong><br><br>
+            <ion-chip routerLink="/featured-trips" color="primary">Featured Trips</ion-chip>
+            <ion-chip routerLink="/booked-trips" color="primary">Booked Trips</ion-chip>
+        </div>
     </div>
     <ion-fab class="bigger" (click)="signout()" vertical="bottom" horizontal="end" slot="fixed">
         <ion-chip color="danger" class="marginer">

@@ -16,7 +16,18 @@
                         <ion-label position="floating">Email</ion-label>
                         <ion-input formControlName="email" type="email" [(ngModel)]="user.email" spellcheck="true"></ion-input>
                     </ion-item>
-                    <ion-row>
+                    <ion-item lines="full">
+                        <ion-label position="stacked">Join as</ion-label>
+                        <ion-select formControlName="role" [(ngModel)]="user.role" placeholder="Select role">
+                            <ion-select-option value="Holding Company">Holding Company</ion-select-option>
+                            <ion-select-option value="Customer">Customer</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item lines="full" *ngIf="user.role == 'Holding Company'">
+                        <ion-label position="floating">Company Name</ion-label>
+                        <ion-input formControlName="companyname" [(ngModel)]="user.companyname" type="text" spellcheck="true"></ion-input>
+                    </ion-item>
+                    <ion-row *ngIf="user.role == 'Customer'">
                         <ion-col size="6">
                             <ion-item lines="full">
                                 <ion-label position="floating">First Name</ion-label>
@@ -30,11 +41,19 @@
                             </ion-item>
                         </ion-col>
                     </ion-row>
-                    <ion-row>
+                    <ion-item lines="full">
+                        <ion-label position="floating">Username</ion-label>
+                        <ion-input formControlName="username" [(ngModel)]="user.username" type="text" spellcheck="true"></ion-input>
+                    </ion-item>
+                    <ion-row *ngIf="user.role == 'Customer'">
                         <ion-col size="6">
                             <ion-item lines="full">
-                                <ion-label position="floating">Username</ion-label>
-                                <ion-input formControlName="username" [(ngModel)]="user.username" type="text" spellcheck="true"></ion-input>
+                                <ion-label position="stacked">Gender</ion-label>
+                                <ion-select formControlName="gender" [(ngModel)]="user.gender" placeholder="Select Gender">
+                                    <ion-select-option value="Female">Female</ion-select-option>
+                                    <ion-select-option value="Male">Male</ion-select-option>
+                                    <ion-select-option value="Other">Other</ion-select-option>
+                                </ion-select>
                             </ion-item>
                         </ion-col>
                         <ion-col size="6">
@@ -45,24 +64,14 @@
                         </ion-col>
                     </ion-row>
                     <ion-item lines="full">
-                        <ion-label position="stacked">Gender</ion-label>
-                        <ion-select formControlName="gender" [(ngModel)]="user.gender" placeholder="Select Gender">
-                            <ion-select-option value="Female">Female</ion-select-option>
-                            <ion-select-option value="Male">Male</ion-select-option>
-                            <ion-select-option value="Other">Other</ion-select-option>
-                        </ion-select>
-                    </ion-item>
-                    <ion-item lines="full">
                         <ion-label position="stacked">Country</ion-label>
                         <ion-select formControlName="country" [(ngModel)]="user.country" placeholder="Select Country">
                             <ion-select-option value="+254">Kenya</ion-select-option>
-                            <ion-select-option value="+263">Zimbambwe</ion-select-option>
-                            <ion-select-option value="+1">United States</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item lines="full">
                         <ion-label position="floating">Phone Number</ion-label>
-                        <ion-input formControlName="phonenumber" placeholder="eg.0712602807" [(ngModel)]="user.phonenumber" type="tel" spellcheck="true"></ion-input>
+                        <ion-input formControlName="phonenumber" placeholder="eg.712602807" [(ngModel)]="user.phonenumber" type="tel" spellcheck="true"></ion-input>
                     </ion-item>
                     <ion-item lines="full">
                         <ion-label position="floating" spellcheck="true" pattern="password">Password</ion-label>
