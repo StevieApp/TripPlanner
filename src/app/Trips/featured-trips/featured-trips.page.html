@@ -42,6 +42,7 @@
                     </ion-chip>
                     <strong>Overview:</strong><br> {{trip.overview}}<br>
                     <strong>Price per slot:</strong> {{trip.price}}/=<br>
+                    <strong>Remaining slots:</strong> {{trip.availableslots}}/=<br>
                     <div *ngIf="!trip.reservation">
                         <strong>Reservation: </strong>
                         <ion-text color="danger">Not available</ion-text>
