@@ -42,6 +42,16 @@
                     </ion-chip>
                     <strong>Overview:</strong><br> {{trip.overview}}<br>
                     <strong>Price per slot:</strong> {{trip.price}}/=<br>
+                    <div *ngIf="!trip.reservation">
+                        <strong>Reservation: </strong>
+                        <ion-text color="danger">Not available</ion-text>
+                    </div>
+                    <div *ngIf="trip.reservation">
+                        <strong>Reservation: </strong>
+                        <ion-text color="success">Available</ion-text><br>
+                        <strong>Reservation Place: </strong>{{trip.reservationplace}}<br>
+                        <strong>Reservation Price: </strong>{{trip.reservationpricing}}/=
+                    </div>
                     <strong>Tips:</strong><br>
                     <div *ngFor="let desc of trip.descriptions; let i = index">
                         <ion-row>

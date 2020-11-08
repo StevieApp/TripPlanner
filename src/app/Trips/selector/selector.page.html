@@ -12,7 +12,13 @@
             <ion-title size="small">Home to Solemn Travel</ion-title>
         </ion-toolbar>
     </ion-header>
-
+    <ion-content *ngIf="!mydetails" fullscreen>
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </ion-content>
     <div id="container" *ngIf="mydetails">
         <div *ngIf="mydetails.role == 'admin' || mydetails.role == 'Holding Company'">
             <strong>Customize own Trip? Select</strong><br><br>

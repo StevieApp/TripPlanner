@@ -5,7 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Button } from 'protractor';
-import { Observable } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -140,14 +140,14 @@ export class FeaturedTripsPage implements OnInit {
   }
 
   remtime(countDownDate): Observable<any>{
-    var timer = new Observable(observer => {
+    var timer = Observable.create(observer => {
       observer.next(this.getRemainingTime(countDownDate));
       setInterval(()=>{
         observer.next(this.getRemainingTime(countDownDate));
         timer.subscribe(limer=>{
           if(limer == "EXPIRED"){
             observer.next("EXPIRED");
-            observer.complete();
+            //observer.complete();
           }
         });
       }, 60000);
@@ -156,13 +156,12 @@ export class FeaturedTripsPage implements OnInit {
   }
 
   timez(countDownDate): Observable<any>{
-    var timer = new Observable(observer => {
+    return Observable.create(observer => {
       var d:any = new Date(countDownDate);
       d = d.toUTCString();
       observer.next(d);
       observer.complete();
     });
-    return timer;
   }
 
   getRemainingTime(countDownDate){
@@ -197,7 +196,114 @@ export class FeaturedTripsPage implements OnInit {
     }
   }
 
+  async presentreservation(trip, bookedslots){
+    let alert = this.alertController.create({
+      backdropDismiss: false,
+      header: trip.reservationplace,
+      subHeader: "Include reservation?",
+      message:  'Per room '+ ' : Ksh ' + trip.reservationpricing 
+      + '/=' + "<br>" +
+      "Reservation Place: " + trip.reservationplace + "<br>",
+      cssClass: 'buttonCss',
+      mode: 'ios',
+      inputs: [
+            {
+              name: 'reservation',
+              placeholder: 'Reservation',
+              type: 'checkbox',
+              label: 'Include Reservation',
+              cssClass: 'specialClass',
+              checked: false,
+              value: true
+            }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'danger',
+          handler: data => {
+            //console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Submit',
+          cssClass: 'success',
+          handler: data => {
+            if(data.length>0){
+              this.presentreservationslots(trip, bookedslots);
+            } else{
+              this.presentAlertConfirm(trip, bookedslots, 0)
+            }
+          }
+        }
+      ]
+    });
+    (await alert).present();
+  }
+  async presentreservationslots(trip, bookedslots){
+    var message = {
+      heading: 'Check your bookings!',
+      body: 'Invalid Booking. Check booking allocation'
+    }
+    let alert = this.alertController.create({
+      backdropDismiss: false,
+      header: trip.reservationplace,
+      subHeader: "Enter the number of rooms:",
+      message:  'Per room '+ ' : Ksh ' + trip.reservationpricing + ' per slot'+ "<br>" +
+      "Maximum Bookable rooms: " + Math.round(trip.slots*.1),
+      mode: 'ios',
+      cssClass: 'buttonCss',
+      inputs: [
+        {
+          name: 'slots',
+          placeholder: 'Slots',
+          type: 'number',
+          value: this.tripvalues,
+          max: Math.ceil((trip.slots*.1)),
+          min: 1,
+          cssClass: 'specialClass',
+          attributes: {
+            max: Math.ceil((trip.slots*.1)),
+            inputmode: 'decimal'
+          }
+        }
+      ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'danger',
+            handler: data => {
+              //console.log('Cancel clicked');
+            }
+          },
+          {
+            text: 'Submit',
+            cssClass: 'success',
+            handler: data => {
+              //console.log(type of data.slots == 40)
+              if(parseInt(data.slots) == undefined ||
+                isNaN(parseInt(data.slots)) ||
+                parseInt(data.slots) > Math.ceil(trip.slots*.1) || 
+                parseInt(data.slots)<=0 || 
+                parseInt(data.slots) > (trip.availableslots)
+              ){
+                this.dangerToast(message);
+                return false;
+              } else{
+                //console.log(parseInt(data.slots));
+                this.presentAlertConfirm(trip, bookedslots, parseInt(data.slots));
+              }
+            }
+          }
+        ]
+      });
+      (await alert).present();
+  }
+
   async presentPrompt(trip) {
+    //console.log(trip.reservation);
     var message = {
       heading: 'Check your slots!',
       body: 'Invalid Slots. Check slot allocation'
@@ -254,7 +360,11 @@ export class FeaturedTripsPage implements OnInit {
               this.dangerToast(message);
               return false;
             } else{
-              this.presentAlertConfirm(trip, parseInt(data.slots));
+              if(trip.reservation){
+                this.presentreservation(trip, parseInt(data.slots));
+              } else {
+                this.presentAlertConfirm(trip, parseInt(data.slots), 0);
+              }
             }
           }
         }
@@ -263,7 +373,7 @@ export class FeaturedTripsPage implements OnInit {
     (await alert).present();
   }
   increment;
-  async presentAlertConfirm(trip, slots) {
+  async presentAlertConfirm(trip, slots, reservationslots) {
     if(trip.bookedusers){
       if(JSON.stringify(trip.bookedusers).includes(this.uid)){
         trip.bookedusers.forEach((item)=>{
@@ -282,11 +392,25 @@ export class FeaturedTripsPage implements OnInit {
       heading: 'Booking ' + trip.name,
       body: 'Cancelled!'
     } 
+    var mymessage;
+    var finalpricing;
+    if(reservationslots==0){
+      mymessage = 'Are you sure you want to book ' + slots 
+      +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each for a total of <br><strong>Ksh. '+ 
+      slots*trip.price + '</strong>';
+      finalpricing = slots*trip.price;
+    } else{
+      mymessage = 'Are you sure you want to <br><br> book ' + slots 
+      +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each for a total of <strong>Ksh. '+ 
+      slots*trip.price + '</strong>' + '<br> and reserve ' + reservationslots + ' room(s) at <strong> Ksh. ' 
+      + trip.reservationpricing +  '</strong> each or a total of <strong>Ksh. ' 
+      + reservationslots*trip.reservationpricing + '</strong> <br> Amounting to <br><strong>' 
+      + (reservationslots*trip.reservationpricing+slots*trip.price) + ' /=</strong>';
+      finalpricing = (reservationslots*trip.reservationpricing+slots*trip.price);
+    }
     const alert = await this.alertController.create({
       header: 'Confirm!',
-      message: 'Are you sure you want to book ' + slots 
-      +' slot(s) at <strong>Ksh. '+ trip.price +'</strong> each or a total of <br><strong>Ksh. '+ 
-      slots*trip.price + '</strong>',
+      message: mymessage,
       cssClass: 'buttonCss',
       mode: 'ios',
       buttons: [
@@ -302,7 +426,7 @@ export class FeaturedTripsPage implements OnInit {
             //console.log('Confirm Okay');
             //console.log(this.user)
             this.router.navigate(['/mpesa'], { queryParams: { 
-              price: slots*trip.price, 
+              price: finalpricing, 
               bookuid: window.sessionStorage.getItem('uid'), 
               slots: slots,
               trip: trip.id,

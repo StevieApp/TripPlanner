@@ -41,6 +41,18 @@
                         <ion-textarea formControlName="overview" [(ngModel)]="trip.overview" rows="4" placeholder="Overview. At least 20 characters"></ion-textarea>
                     </ion-item>
                     <ion-item lines="full">
+                        <ion-checkbox mode="ios" formControlName="reservation" [(ngModel)]="trip.reservation" color="secondary"></ion-checkbox>
+                        <ion-label>Reservation</ion-label>
+                    </ion-item>
+                    <ion-item lines="full" *ngIf="trip.reservation && trip.reservation==true">
+                        <ion-label position="floating">Reservation Place</ion-label>
+                        <ion-input formControlName="reservationplace" [(ngModel)]="trip.reservationplace"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full" *ngIf="trip.reservation &&  trip.reservation==true">
+                        <ion-label position="floating">Reservation Pricing</ion-label>
+                        <ion-input formControlName="reservationpricing" [(ngModel)]="trip.reservationpricing"></ion-input>
+                    </ion-item>
+                    <ion-item lines="full">
                         <ion-label>Start Date</ion-label>
                         <ion-datetime formControlName="startdate" [(ngModel)]="trip.startdate" displayFormat="MM/DD/YYYY" min="{{nextday}}" value="{{nextday}}" max="{{dt.getFullYear()+1}}"></ion-datetime>
                     </ion-item>
@@ -60,10 +72,10 @@
                         <ion-label class="centered">Slots</ion-label>
                     </ion-item>
                     <ion-row>
-                        <ion-col size="3">
+                        <ion-col (click)="changeslots('subtract')" size="3">
                             <ion-item lines="none">
                                 <ion-label>
-                                    <ion-icon (click)="changeslots('subtract')" color="danger" name="remove-circle-outline" tappable>
+                                    <ion-icon color="danger" name="remove-circle-outline" tappable>
                                         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                     </ion-icon>
                                 </ion-label>
@@ -74,10 +86,10 @@
                                 <ion-input class="centered" formControlName="slots" [(ngModel)]="trip.slots" type="number"></ion-input>
                             </ion-item>
                         </ion-col>
-                        <ion-col size="3">
+                        <ion-col (click)="changeslots('add')" size="3">
                             <ion-item lines="none">
                                 <ion-label>
-                                    <ion-icon (click)="changeslots('add')" color="success" name="add-circle-outline" tappable>
+                                    <ion-icon color="success" name="add-circle-outline" tappable>
                                         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                     </ion-icon>
                                 </ion-label>
@@ -88,10 +100,10 @@
                         <ion-label class="centered">Price</ion-label>
                     </ion-item>
                     <ion-row>
-                        <ion-col size="3">
+                        <ion-col (click)="changeprice('subtract')" size="3">
                             <ion-item lines="none">
                                 <ion-label>
-                                    <ion-icon (click)="changeprice('subtract')" color="danger" name="remove-circle-outline" tappable>
+                                    <ion-icon color="danger" name="remove-circle-outline" tappable>
                                         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                     </ion-icon>
                                 </ion-label>
@@ -102,10 +114,10 @@
                                 <ion-input class="centered" formControlName="price" [(ngModel)]="trip.price" type="number"></ion-input>
                             </ion-item>
                         </ion-col>
-                        <ion-col size="3">
+                        <ion-col (click)="changeprice('add')" size="3">
                             <ion-item lines="none">
                                 <ion-label>
-                                    <ion-icon (click)="changeprice('add')" color="success" name="add-circle-outline" tappable>
+                                    <ion-icon color="success" name="add-circle-outline" tappable>
                                         <ion-ripple-effect type="unbounded"></ion-ripple-effect>
                                     </ion-icon>
                                 </ion-label>

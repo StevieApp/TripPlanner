@@ -222,7 +222,7 @@ export class BookedTripsPage implements OnInit {
         timer.subscribe(limer=>{
           if(limer == "EXPIRED"){
             observer.next("EXPIRED");
-            observer.complete();
+            //observer.complete();
           }
         });
       }, 60000);

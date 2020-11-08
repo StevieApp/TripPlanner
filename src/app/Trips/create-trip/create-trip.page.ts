@@ -174,6 +174,11 @@ export class CreateTripPage implements OnInit {
   }
 
   async saveToDatabase(loading){
+    if(this.trip.reservation == false){
+      delete this.trip['reservationplace'];
+      delete this.trip['reservationpricing'];
+    }
+    //console.log(this.trip);
     this.trip.availableslots = this.trip.slots;
     this.trip.bookedusers = [];
     try {
@@ -446,6 +451,15 @@ export class CreateTripPage implements OnInit {
       this.createTripForm = new FormGroup({
         tripimage: new FormControl('',[
           Validators.required
+        ]),
+        reservation: new FormControl('',[
+          Validators.required
+        ]),
+        reservationplace: new FormControl('',[]),
+        reservationpricing: new FormControl('',[
+          Validators.min(500),
+          Validators.max(1000000),
+          Validators.pattern(/^-?(0|[1-9]\d*)?$/)
         ]),
         name: new FormControl('',[
           Validators.required,
