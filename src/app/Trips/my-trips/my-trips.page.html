@@ -42,7 +42,8 @@
                     </ion-chip>
                     <strong>Overview:</strong><br> {{trip.overview}}<br>
                     <strong>Price per slot:</strong> {{trip.price}}/=<br>
-                    <strong>Remaining slots:</strong> {{trip.availableslots}}/=<br>
+                    <strong>Available slots:</strong> {{trip.slots}}<br>
+                    <strong>Remaining slots:</strong> {{trip.availableslots}}<br>
                     <strong>Tips:</strong>
                     <br>
                     <div *ngFor="let desc of trip.descriptions; let i = index">
