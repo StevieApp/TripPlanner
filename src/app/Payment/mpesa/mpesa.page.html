@@ -17,11 +17,11 @@
                     </ion-list-header>
                     <ion-item (click)="makechanges();shownumber=false">
                         <ion-label>My Phone Number</ion-label>
-                        <ion-radio slot="start" color="success" value="myphone"></ion-radio>
+                        <ion-radio mode="ios" slot="start" color="success" value="myphone"></ion-radio>
                     </ion-item>
                     <ion-item (click)="makechanges();shownumber=true">
                         <ion-label>Other Phone Number</ion-label>
-                        <ion-radio slot="start" color="tertiary" value="othernumber"></ion-radio>
+                        <ion-radio mode="ios" slot="start" color="tertiary" value="othernumber"></ion-radio>
                     </ion-item>
                 </ion-radio-group>
                 <ion-item *ngIf="shownumber==true" lines="full">

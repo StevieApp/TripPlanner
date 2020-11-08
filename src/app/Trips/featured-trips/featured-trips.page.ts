@@ -408,6 +408,7 @@ export class FeaturedTripsPage implements OnInit {
       + (reservationslots*trip.reservationpricing+slots*trip.price) + ' /=</strong>';
       finalpricing = (reservationslots*trip.reservationpricing+slots*trip.price);
     }
+    //console.log(reservationslots);
     const alert = await this.alertController.create({
       header: 'Confirm!',
       message: mymessage,
@@ -424,7 +425,7 @@ export class FeaturedTripsPage implements OnInit {
           text: 'Okay',
           handler: () => {
             //console.log('Confirm Okay');
-            //console.log(this.user)
+            //console.log(this.user);
             this.router.navigate(['/mpesa'], { queryParams: { 
               price: finalpricing, 
               bookuid: window.sessionStorage.getItem('uid'), 
@@ -432,7 +433,8 @@ export class FeaturedTripsPage implements OnInit {
               trip: trip.id,
               user: this.uid,
               username: this.user.username,
-              increment: this.increment
+              increment: this.increment,
+              reserved: reservationslots
             }});
           }
         }

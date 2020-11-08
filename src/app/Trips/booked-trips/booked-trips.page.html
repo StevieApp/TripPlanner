@@ -108,7 +108,11 @@
                                         <ion-avatar>
                                             <img src="{{trip.imageURL}}">
                                         </ion-avatar>
-                                        <ion-label>{{user.username}} | Slots: {{user.slots}}</ion-label>
+                                        <ion-label>{{user.username}} | Slots: {{user.slots}}
+                                            <ion-text *ngIf="user.reserved && user.reserved>0">
+                                                | Reserved: | {{user.reserved}}
+                                            </ion-text>
+                                        </ion-label>
                                         <!-- <ion-icon name="close-circle"></ion-icon> -->
                                     </ion-chip>
                                 </div>

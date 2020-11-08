@@ -293,6 +293,7 @@ export class MPESAPage implements OnInit {
     setTimeout(()=>{
       let nativeCall = this.nativeHttp.post('https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query', reqjson, headers);
       from(nativeCall).pipe().subscribe(data=>{
+        //console.log(JSON.stringify(JSON.parse(data.data).ResultDesc));
         if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('successfully')){
           this.actualsuccessToast('Payment successful');
           this.addToBooked(
@@ -310,14 +311,15 @@ export class MPESAPage implements OnInit {
         }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('timeout')){
           this.successToast('Payment did not go through');
           this.paying = false;
-        }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('Limited')){
-          this.successToast('Payment did not go through');
+        }else if(JSON.stringify(JSON.parse(data.data).ResultDesc).includes('Rule limited')){
+          this.successToast('Payment recently happended with this number');
           this.paying = false;
         }
       }, err=>{
         if(JSON.stringify(err.error).includes('being processed')){
           this.checkpayment(mydata, pwd, time, token);
         } else{
+          console.log(err)
           this.successToast('Issue while confirming payment. Check your booked trips'); 
           this.router.navigate(['/booked-trips']);
         }
@@ -334,6 +336,15 @@ export class MPESAPage implements OnInit {
           user: userid,
           slots: (parseInt(increment)),
           paid: amount,
+          username: username,
+          reserved: this.parameters.reserved
+        })
+      });
+      updateRef.update({
+        bookedusers: firestore.FieldValue.arrayRemove({
+          user: userid,
+          slots: (parseInt(increment)),
+          paid: amount,
           username: username
         })
       });
@@ -342,7 +353,8 @@ export class MPESAPage implements OnInit {
           user: userid,
           slots: (parseInt(slots)+parseInt(increment)),
           paid: amount,
-          username: username
+          username: username,
+          reserved: this.parameters.reserved
         }),
         availableslots: firestore.FieldValue.increment(-parseInt(slots))
       });
